@@ -30,7 +30,7 @@ app.use(
   })
 );
 
-// Set the _csrf token and create req.csrfToken method
+// Set the csrf token and create req.csrfToken method
 app.use(
   csurf({
     cookie: {
@@ -54,7 +54,7 @@ app.use((_req, _res, next) => {
 
 // Processes sequelize errors
 app.use((err, _req, _res, next) => {
-  // check if error is a Sequelize error:
+  // checks if error is a Sequelize error
   if (err instanceof ValidationError) {
     let errors = {};
     for (let error of err.errors) {
