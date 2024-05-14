@@ -24,6 +24,28 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isAlpha: {
+            args: true,
+            msg: "First name must contain only letters.",
+          },
+          len: [1, 50],
+        },
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isAlpha: {
+            args: true,
+            msg: "Last name must contain only letters.",
+          },
+          len: [1, 50],
+        },
+      },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
