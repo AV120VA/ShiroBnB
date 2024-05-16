@@ -18,6 +18,8 @@ module.exports = {
           references: {
             model: "Review",
             key: "id",
+            onUpdate: "CASCADE",
+            onDelete: "CASCADE",
           },
         },
         url: {
