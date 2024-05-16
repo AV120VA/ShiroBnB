@@ -1,7 +1,7 @@
-"use strict";
-/** @type {import('sequelize-cli').Migration} */
-
 const bcrypt = require("bcrypt");
+
+("use strict");
+/** @type {import('sequelize-cli').Migration} */
 
 let options = {};
 if (process.env.NODE_ENV === "production") {
