@@ -60,12 +60,4 @@ router.post("/", validateSignup, async (req, res) => {
   });
 });
 
-router.get("/test/all", async (req, res) => {
-  const users = await User.findAll({
-    attributes: ["firstName", "lastName"],
-  });
-
-  return res.json(users);
-});
-
 module.exports = router;
