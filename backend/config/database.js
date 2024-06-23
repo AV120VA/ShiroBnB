@@ -9,7 +9,7 @@ module.exports = {
     typeValidation: true,
   },
   production: {
-    use_env_variable: "DATABASE_URL",
+    use_env_variable: "https://api-project-cz3a.onrender.com",
     dialect: "postgres",
     seederStorage: "sequelize",
     dialectOptions: {
