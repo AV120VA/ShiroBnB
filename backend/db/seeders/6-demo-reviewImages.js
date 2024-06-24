@@ -1,25 +1,44 @@
-'use strict';
+"use strict";
+
+const { ReviewImage } = require("../models");
+
+let options = {};
+if (process.env.NODE_ENV === "production") {
+  options.schema = process.env.SCHEMA;
+}
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+  async up(queryInterface, Sequelize) {
+    await ReviewImage.bulkCreate([
+      {
+        reviewId: 1,
+        url: "image.png",
+      },
+      {
+        reviewId: 1,
+        url: "image.png",
+      },
+      {
+        reviewId: 2,
+        url: "image.png",
+      },
+      {
+        reviewId: 2,
+        url: "image.png",
+      },
+      {
+        reviewId: 3,
+        url: "image.png",
+      },
+      {
+        reviewId: 3,
+        url: "image.png",
+      },
+    ]);
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-  }
+  async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("ReviewImages", null, {});
+  },
 };

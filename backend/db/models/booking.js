@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
           isBefore: {
             args: [
               new Date(
-                new Date().getFullYear() + 2,
+                new Date().getFullYear() + 1,
                 new Date().getMonth(),
                 new Date().getDate()
               ),
@@ -69,18 +69,12 @@ module.exports = (sequelize, DataTypes) => {
             args: true,
             msg: "Please select a valid date.",
           },
-          isBefore: {
-            args: [
-              new Date(
-                new Date().getFullYear(),
-                new Date().getMonth(),
-                new Date().getDate() - 91
-              ),
-            ],
-            msg: "Please select a valid date.",
-          },
           isAfter: {
             args: [new Date()],
+            msg: "Please select a valid date.",
+          },
+          isBefore: {
+            args: [sequelize.literal("startDate + INTERVAL 1 YEAR")],
             msg: "Please select a valid date.",
           },
         },
