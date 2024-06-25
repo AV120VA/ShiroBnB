@@ -2,6 +2,7 @@ const express = require("express");
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
+const { requireAuth } = require("../../utils/auth");
 
 const { Spot } = require("../../db/models");
 const { SpotImage } = require("../../db/models");
@@ -139,6 +140,7 @@ router.post("/", validateCreation, async (req, res) => {
 router.post("/:spotId/images", async (req, res) => {
   const { url, preview } = req.body;
   const spot = await Spot.findByPk(req.params.spotId);
+
   const userId = req.user.id;
 
   if (!spot) {
@@ -165,6 +167,43 @@ router.post("/:spotId/images", async (req, res) => {
       preview: newSpotImage.preview,
     };
     return res.status(200).json({ formatSpotImage });
+  }
+});
+
+//edit a spot
+router.put("/:spotId", validateCreation, async (req, res) => {
+  const spot = await Spot.findByPk(req.params.spotId);
+
+  if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
+
+  const userId = req.user.id;
+  const { address, city, state, country, lat, lng, name, description, price } =
+    req.body;
+
+  if (spot.ownerId !== userId) {
+    return res.status(403).json({
+      message: "Targeted spot must belong to user",
+    });
+  }
+
+  if (spot.ownerId === userId) {
+    if (address) spot.address = address;
+    if (city) spot.city = city;
+    if (state) spot.state = state;
+    if (country) spot.country = country;
+    if (lat) spot.lat = lat;
+    if (lng) spot.lng = lng;
+    if (name) spot.name = name;
+    if (description) spot.description = description;
+    if (price) spot.price = price;
+
+    await spot.validate();
+
+    return res.status(200).json(spot);
   }
 });
 
