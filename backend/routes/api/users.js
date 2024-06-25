@@ -9,6 +9,8 @@ const { User } = require("../../db/models");
 
 const router = express.Router();
 
+// address, city, state, country, lat, lng, name, description, price
+
 const validateSignup = [
   check("email")
     .exists({ checkFalsy: true })

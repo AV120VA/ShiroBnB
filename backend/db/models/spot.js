@@ -40,10 +40,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: [1, 50],
-          isAlpha: {
-            args: true,
-            msg: "City must contain only letters.",
-          },
         },
       },
       state: {
@@ -62,10 +58,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: [1, 50],
-          isAlpha: {
-            args: true,
-            msg: "Country must contain only letters.",
-          },
         },
       },
       lat: {
@@ -96,7 +88,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [1, 250],
+          len: [1, 50],
         },
       },
       description: {
