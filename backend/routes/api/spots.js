@@ -7,7 +7,7 @@ const { requireAuth } = require("../../utils/auth");
 const { Spot } = require("../../db/models");
 const { SpotImage } = require("../../db/models");
 const { User } = require("../../db/models");
-const { handle } = require("express/lib/router");
+// const { handle } = require("express/lib/router");
 
 const router = express.Router();
 
