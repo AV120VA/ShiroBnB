@@ -1,5 +1,7 @@
 const express = require("express");
 const { Spot } = require("../../db/models");
+const { SpotImage } = require("../../db/models");
+const { User } = require("../../db/models");
 
 const router = express.Router();
 
@@ -23,7 +25,35 @@ router.get("/current", async (req, res) => {
 
 //get details of a spot by id
 router.get("/:spotId", async (req, res) => {
-  //need to make seeder files for spotImages in order to be able to test for the response body they want
+  const id = req.params.spotId;
+
+  let spot = await Spot.findByPk(id);
+  let spotImages;
+  let owner;
+
+  if (spot) {
+    spotImages = await SpotImage.findAll({
+      where: {
+        spotId: id,
+      },
+    });
+
+    owner = await User.findByPk(spot.ownerId);
+
+    const safeOwner = {
+      id: owner.id,
+      firstName: owner.firstName,
+      lastName: owner.lastName,
+    };
+
+    return res
+      .status(200)
+      .json({ ...spot.toJSON(), SpotImages: spotImages, Owner: safeOwner });
+  } else if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
 });
 
 module.exports = router;
