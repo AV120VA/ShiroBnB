@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: [1, 100],
+          notEmpty: true,
         },
       },
       city: {
@@ -40,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: [1, 50],
+          notEmpty: true,
         },
       },
       state: {
@@ -51,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
             args: true,
             msg: "State must contain only letters.",
           },
+          notEmpty: true,
         },
       },
       country: {
@@ -58,6 +61,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: [1, 50],
+          notEmpty: true,
         },
       },
       lat: {
@@ -89,6 +93,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: [1, 50],
+          notEmpty: true,
         },
       },
       description: {
@@ -96,6 +101,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: [1, 500],
+          notEmpty: true,
         },
       },
       price: {
