@@ -63,7 +63,7 @@ router.get("/", async (req, res) => {
 });
 
 //get all spots owned by current user
-router.get("/current", async (req, res) => {
+router.get("/current", requireAuth, async (req, res) => {
   const userId = req.user.id;
 
   let userSpots = await Spot.findAll({
@@ -107,7 +107,7 @@ router.get("/:spotId", async (req, res) => {
 });
 
 //create a spot
-router.post("/", validateCreation, async (req, res) => {
+router.post("/", requireAuth, validateCreation, async (req, res) => {
   const { address, city, state, country, lat, lng, name, description, price } =
     req.body;
 
@@ -137,7 +137,7 @@ router.post("/", validateCreation, async (req, res) => {
 
 //add an image to a spot based on the spot id
 
-router.post("/:spotId/images", async (req, res) => {
+router.post("/:spotId/images", requireAuth, async (req, res) => {
   const { url, preview } = req.body;
   const spot = await Spot.findByPk(req.params.spotId);
 
@@ -171,7 +171,7 @@ router.post("/:spotId/images", async (req, res) => {
 });
 
 //edit a spot
-router.put("/:spotId", async (req, res) => {
+router.put("/:spotId", requireAuth, async (req, res) => {
   const spot = await Spot.findByPk(req.params.spotId);
 
   if (!spot) {
