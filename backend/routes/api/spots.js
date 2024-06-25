@@ -171,7 +171,7 @@ router.post("/:spotId/images", async (req, res) => {
 });
 
 //edit a spot
-router.put("/:spotId", validateCreation, async (req, res) => {
+router.put("/:spotId", async (req, res) => {
   const spot = await Spot.findByPk(req.params.spotId);
 
   if (!spot) {
@@ -205,6 +205,30 @@ router.put("/:spotId", validateCreation, async (req, res) => {
 
     return res.status(200).json(spot);
   }
+});
+
+//delete a spot
+router.delete("/:spotId", requireAuth, async (req, res) => {
+  console.log("is this endpoint even being hit ??????????");
+  let spot = await Spot.findByPk(req.params.spotId);
+  const userId = req.user.id;
+
+  if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
+
+  if (spot.ownerId !== userId) {
+    return res.status(403).json({
+      message: "You are not authorized to perform this action",
+    });
+  }
+  await spot.destroy();
+
+  return res.status(200).json({
+    message: "Successfully deleted",
+  });
 });
 
 module.exports = router;
