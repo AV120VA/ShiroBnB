@@ -301,7 +301,15 @@ router.post(
 //get all bookings for a spot based on the spot's id
 router.get("/:spotId/bookings", requireAuth, async (req, res) => {
   let spot = await Spot.findByPk(req.params.spotId);
+
+  if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
+
   let user = await User.findByPk(req.user.id);
+  
   let bookings = await Booking.findAll({
     where: {
       spotId: spot.id,
@@ -314,12 +322,6 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
       },
     ],
   });
-
-  if (!spot) {
-    return res.status(404).json({
-      message: "Spot couldn't be found",
-    });
-  }
 
   if (spot.ownerId !== user.id) {
     return res.status(200).json({
