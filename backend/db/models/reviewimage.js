@@ -31,10 +31,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: [1, 500],
-          isURL: {
-            args: true,
-            msg: "Invalid URL format.",
-          },
         },
       },
     },
