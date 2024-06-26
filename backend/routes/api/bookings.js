@@ -144,4 +144,45 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
   });
 });
 
+//delete a booking //delete a booking
+router.delete("/:bookingId", requireAuth, async (req, res) => {
+  let booking = await Booking.findByPk(req.params.bookingId);
+  let spot = await Spot.findByPk(booking.spotId);
+  let status = 0;
+  let currentDate = new Date();
+  let formattedStartDate = new Date(booking.startDate);
+
+  if (!booking) {
+    return res.status(404).json({
+      message: "Booking couldn't be found",
+    });
+  }
+
+  if (currentDate >= formattedStartDate) {
+    return res.status(403).json({
+      message: "Bookings that have been started can't be deleted",
+    });
+  }
+  if (booking.userId === req.user.id) {
+    status = 1;
+  }
+
+  if (spot.ownerId === req.user.id) {
+    status = 1;
+  }
+
+  if (status === 1) {
+    await booking.destroy();
+    return res.status(200).json({
+      message: "Successfully deleted",
+    });
+  }
+
+  if (status === 0) {
+    return res.status(403).json({
+      message: "You don't have the authorization for this action",
+    });
+  }
+});
+
 module.exports = router;
