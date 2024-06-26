@@ -147,16 +147,17 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
 //delete a booking //delete a booking
 router.delete("/:bookingId", requireAuth, async (req, res) => {
   let booking = await Booking.findByPk(req.params.bookingId);
-  let spot = await Spot.findByPk(booking.spotId);
-  let status = 0;
-  let currentDate = new Date();
-  let formattedStartDate = new Date(booking.startDate);
 
   if (!booking) {
     return res.status(404).json({
       message: "Booking couldn't be found",
     });
   }
+
+  let spot = await Spot.findByPk(booking.spotId);
+  let status = 0;
+  let currentDate = new Date();
+  let formattedStartDate = new Date(booking.startDate);
 
   if (currentDate >= formattedStartDate) {
     return res.status(403).json({
