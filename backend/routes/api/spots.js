@@ -7,6 +7,8 @@ const { requireAuth } = require("../../utils/auth");
 const { Spot } = require("../../db/models");
 const { SpotImage } = require("../../db/models");
 const { User } = require("../../db/models");
+const { Review } = require("../../db/models");
+const { ReviewImage } = require("../../db/models");
 // const { handle } = require("express/lib/router");
 
 const router = express.Router();
@@ -229,6 +231,33 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
   return res.status(200).json({
     message: "Successfully deleted",
   });
+});
+
+//get all reviews by a spot's id
+router.get("/:spotId/reviews", async (req, res) => {
+  let spot = await Spot.findByPk(req.params.spotId);
+
+  if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
+
+  if (spot) {
+    let reviews = await Review.findAll({
+      where: {
+        spotId: spot.id,
+      },
+      include: [
+        {
+          model: ReviewImage,
+          as: "ReviewImages",
+        },
+      ],
+    });
+
+    return res.status(200).json({ Reviews: reviews });
+  }
 });
 
 module.exports = router;
