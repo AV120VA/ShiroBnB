@@ -89,4 +89,36 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
   return res.status(200).json({ ...formatImage });
 });
 
+//edit a review
+router.put(
+  "/:reviewId",
+  validateReviewCreation,
+  requireAuth,
+  async (req, res) => {
+    const { review, stars } = req.body;
+    let targetReview = await Review.findByPk(req.params.reviewId);
+
+    if (!review) {
+      return res.status(400).json({
+        message: "Review couldn't be found",
+      });
+    }
+
+    if (targetReview.userId !== req.user.id) {
+      res.status(403).json({
+        message: "You are not authorized to perform this action",
+      });
+    }
+
+    if (review) targetReview.review = review;
+    if (stars) targetReview.stars = stars;
+
+    await targetReview.validate();
+
+    return res.status(200).json({
+      targetReview,
+    });
+  }
+);
+
 module.exports = router;
