@@ -9,6 +9,7 @@ const { SpotImage } = require("../../db/models");
 const { User } = require("../../db/models");
 const { Review } = require("../../db/models");
 const { ReviewImage } = require("../../db/models");
+const { Booking } = require("../../db/models");
 // const { handle } = require("express/lib/router");
 
 const router = express.Router();
@@ -296,5 +297,46 @@ router.post(
     return res.status(201).json({ ...newReview.toJSON() });
   }
 );
+
+//get all bookings for a spot based on the spot's id
+router.get("/:spotId/bookings", requireAuth, async (req, res) => {
+  let spot = await Spot.findByPk(req.params.spotId);
+  let user = await User.findByPk(req.user.id);
+  let bookings = await Booking.findAll({
+    where: {
+      spotId: spot.id,
+    },
+    include: [
+      {
+        model: User,
+        as: "User",
+        attributes: ["id", "firstName", "lastName"],
+      },
+    ],
+  });
+
+  if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
+
+  if (spot.ownerId !== user.id) {
+    return res.status(200).json({
+      Bookings: bookings,
+    });
+  }
+
+  if (spot.ownerId === user.id) {
+    const formattedBookings = bookings.map((booking) => {
+      const { User, ...bookingData } = booking.toJSON();
+      return { User, ...bookingData };
+    });
+
+    return res.status(200).json({
+      Bookings: formattedBookings,
+    });
+  }
+});
 
 module.exports = router;
