@@ -96,6 +96,24 @@ router.put(
   requireAuth,
   async (req, res) => {
     const { review, stars } = req.body;
+
+    let errors = {};
+
+    if (review.length <= 0) {
+      errors.review = "Review text is required";
+    }
+
+    if (stars % 1 !== 0 || stars < 1 || stars > 5) {
+      errors.stars = "Stars must be an integer from 1 to 5";
+    }
+
+    if (errors.review || errors.stars) {
+      return res.status(400).json({
+        message: "Bad Request",
+        errors,
+      });
+    }
+
     let targetReview = await Review.findByPk(req.params.reviewId);
 
     if (!review) {
@@ -120,5 +138,8 @@ router.put(
     });
   }
 );
+
+//delete a review
+router.delete("/:reviewId", requireAuth);
 
 module.exports = router;
