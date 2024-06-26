@@ -8,7 +8,21 @@ const { Spot } = require("../../db/models");
 const { Review } = require("../../db/models");
 const { User } = require("../../db/models");
 const { ReviewImage } = require("../../db/models");
+
 const router = express.Router();
+
+const validateReviewCreation = [
+  check("review")
+    .exists({ checkFalsy: true })
+    .notEmpty({ checkFalsy: true })
+    .isLength({ min: 1, max: 250 })
+    .withMessage("Review text is required"),
+  check("stars")
+    .exists({ checkFalsy: true })
+    .notEmpty({ checkFalsy: true })
+    .isInt({ min: 1, max: 5 })
+    .withMessage("Stars must be an integer from 1 to 5"),
+];
 
 //get all reviews of the current user
 router.get("/current", requireAuth, async (req, res) => {

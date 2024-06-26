@@ -13,6 +13,20 @@ const { ReviewImage } = require("../../db/models");
 
 const router = express.Router();
 
+const validateReviewCreation = [
+  check("review")
+    .exists({ checkFalsy: true })
+    .notEmpty({ checkFalsy: true })
+    .isLength({ min: 1, max: 250 })
+    .withMessage("Review text is required"),
+  check("stars")
+    .exists({ checkFalsy: true })
+    .notEmpty({ checkFalsy: true })
+    .isInt({ min: 1, max: 5 })
+    .withMessage("Stars must be an integer from 1 to 5"),
+  handleValidationErrors,
+];
+
 const validateCreation = [
   check("address")
     .exists({ checkFalsy: true })
@@ -259,5 +273,28 @@ router.get("/:spotId/reviews", async (req, res) => {
     return res.status(200).json({ Reviews: reviews });
   }
 });
+
+//create a review for a spot based on the spots id
+router.post(
+  "/:spotId/reviews",
+  requireAuth,
+  validateReviewCreation,
+  async (req, res) => {
+    let spot = await Spot.findByPk(req.params.spotId);
+    if (!spot) {
+      return res.status(404).json({
+        message: "Spot couldn't be found",
+      });
+    }
+    let newReview = await Review.create({
+      userId: req.user.id,
+      spotId: req.params.spotId,
+      review: req.body.review,
+      stars: req.body.stars,
+    });
+
+    return res.status(201).json({ ...newReview.toJSON() });
+  }
+);
 
 module.exports = router;
