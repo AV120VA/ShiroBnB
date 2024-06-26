@@ -1,4 +1,5 @@
 const express = require("express");
+const { Op } = require("sequelize");
 
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -13,6 +14,16 @@ const { Booking } = require("../../db/models");
 // const { handle } = require("express/lib/router");
 
 const router = express.Router();
+
+// const validateBookingCreation = [
+//   check("startDate")
+//     .isAfter(new Date())
+//     .withMessage("startDate cannot be in the past"),
+//   check("endDate")
+//     .isAfter("startDate")
+//     .withMessage("endDate cannot be on or before startDate"),
+//   handleValidationErrors,
+// ];
 
 const validateReviewCreation = [
   check("review")
@@ -282,11 +293,13 @@ router.post(
   validateReviewCreation,
   async (req, res) => {
     let spot = await Spot.findByPk(req.params.spotId);
+
     if (!spot) {
       return res.status(404).json({
         message: "Spot couldn't be found",
       });
     }
+
     let newReview = await Review.create({
       userId: req.user.id,
       spotId: req.params.spotId,
@@ -309,7 +322,7 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
   }
 
   let user = await User.findByPk(req.user.id);
-  
+
   let bookings = await Booking.findAll({
     where: {
       spotId: spot.id,
@@ -339,6 +352,111 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
       Bookings: formattedBookings,
     });
   }
+});
+
+//create a booking from a spot based on the spots id
+router.post("/:spotId/bookings", requireAuth, async (req, res) => {
+  let spot = await Spot.findByPk(req.params.spotId);
+
+  if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+    });
+  }
+
+  if (spot.userId === req.user.id) {
+    return res.status(400).json({
+      message: "You cannot book your own spot",
+    });
+  }
+
+  let currentDate = new Date();
+  let formattedStartDate = new Date(req.body.startDate);
+  let formattedEndDate = new Date(req.body.endDate);
+
+  // validating date conditional
+  if (formattedStartDate < currentDate) {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors: {
+        startDate: "startDate cannot be in the past",
+      },
+    });
+  }
+
+  if (formattedEndDate <= formattedStartDate) {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors: {
+        endDate: "endDate cannot be on or before startDate",
+      },
+    });
+  }
+
+  // check for booking conflicts
+  let checkBooking = await Booking.findAll({
+    where: {
+      spotId: req.params.spotId,
+      [Op.or]: [
+        {
+          startDate: {
+            [Op.between]: [
+              formattedStartDate.toISOString(),
+              formattedEndDate.toISOString(),
+            ],
+          },
+        },
+        {
+          endDate: {
+            [Op.between]: [
+              formattedStartDate.toISOString(),
+              formattedEndDate.toISOString(),
+            ],
+          },
+        },
+        {
+          [Op.and]: [
+            { startDate: { [Op.lte]: formattedStartDate.toISOString() } },
+            { endDate: { [Op.gte]: formattedEndDate.toISOString() } },
+          ],
+        },
+      ],
+    },
+  });
+
+  if (checkBooking.length > 0) {
+    return res.status(403).json({
+      message: "Sorry, this spot is already booked for the specified dates",
+      errors: {
+        startDate: "Start date conflicts with an existing booking",
+        endDate: "End date conflicts with an existing booking",
+      },
+    });
+  }
+
+  let newBooking = await Booking.create({
+    spotId: req.params.spotId,
+    userId: req.user.id,
+    startDate: formattedStartDate.toISOString(),
+    endDate: formattedEndDate.toISOString(),
+  });
+
+  // Format createdAt and updatedAt to "YYYY-MM-DD HH:mm:ss"
+  const formattedNewBooking = {
+    ...newBooking.toJSON(),
+    createdAt: newBooking.createdAt
+      .toISOString()
+      .replace("T", " ")
+      .slice(0, 19),
+    updatedAt: newBooking.updatedAt
+      .toISOString()
+      .replace("T", " ")
+      .slice(0, 19),
+    startDate: formattedStartDate.toISOString().split("T")[0],
+    endDate: formattedEndDate.toISOString().split("T")[0],
+  };
+
+  return res.status(201).json(formattedNewBooking);
 });
 
 module.exports = router;

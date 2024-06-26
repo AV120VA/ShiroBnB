@@ -36,11 +36,13 @@ module.exports = {
           },
         },
         startDate: {
-          type: Sequelize.DATE,
+          //changed this to string
+          type: Sequelize.STRING,
           allowNull: false,
         },
         endDate: {
-          type: Sequelize.DATE,
+          //changed this to string
+          type: Sequelize.STRING,
           allowNull: false,
         },
         createdAt: {

@@ -39,45 +39,47 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       startDate: {
-        type: DataTypes.DATE,
+        //changed this to string
+        type: DataTypes.STRING,
         allowNull: "false",
-        validate: {
-          isDate: {
-            args: true,
-            msg: "Please select a valid date.",
-          },
-          isAfter: {
-            args: [new Date()],
-            msg: "Please select a valid date.",
-          },
-          isBefore: {
-            args: [
-              new Date(
-                new Date().getFullYear() + 1,
-                new Date().getMonth(),
-                new Date().getDate()
-              ),
-            ],
-            msg: "Please select a valid date.",
-          },
-        },
+        // validate: {
+        //   isDate: {
+        //     args: true,
+        //     msg: "Please select a valid date.",
+        //   },
+        //   isAfter: {
+        //     args: [new Date()],
+        //     msg: "Please select a valid date.",
+        //   },
+        //   isBefore: {
+        //     args: [
+        //       new Date(
+        //         new Date().getFullYear() + 1,
+        //         new Date().getMonth(),
+        //         new Date().getDate()
+        //       ),
+        //     ],
+        //     msg: "Please select a valid date.",
+        //   },
+        // },
       },
       endDate: {
-        type: DataTypes.DATE,
+        //changed this to string
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isDate: {
-            args: true,
-            msg: "Please select a valid date.",
-          },
-          isAfter: {
-            args: [new Date()],
-            msg: "Please select a valid date.",
-          },
-          isBefore: {
-            args: [sequelize.literal("startDate + INTERVAL 1 YEAR")],
-            msg: "Please select a valid date.",
-          },
+          // isDate: {
+          //   args: true,
+          //   msg: "Please select a valid date.",
+          // },
+          // isAfter: {
+          //   args: [new Date()],
+          //   msg: "Please select a valid date.",
+          // },
+          // isBefore: {
+          //   args: [sequelize.literal("startDate + INTERVAL 1 YEAR")],
+          //   msg: "Please select a valid date.",
+          // },
         },
       },
     },
