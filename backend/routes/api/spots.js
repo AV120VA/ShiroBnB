@@ -246,12 +246,12 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
       preview,
       spotId: spot.id,
     });
-    const formatSpotImage = {
+
+    return res.status(200).json({
       id: newSpotImage.id,
       url: newSpotImage.url,
       preview: newSpotImage.preview,
-    };
-    return res.status(200).json({ SpotImage: formatSpotImage });
+    });
   }
 });
 
