@@ -132,18 +132,6 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
     });
   }
 
-  // let reviewImages = await ReviewImage.findAll({
-  //   where: {
-  //     reviewId: review.id,
-  //   },
-  // });
-
-  // if (reviewImages.count >= 10) {
-  //   return res.status(403).json({
-  //     message: "Maximum number of images for this resource was reached",
-  //   });
-  // }
-
   let newImage = await ReviewImage.create({
     reviewId: review.id,
     url: req.body.url,
@@ -211,15 +199,15 @@ router.put(
 router.delete("/:reviewId", requireAuth, async (req, res) => {
   let review = await Review.findByPk(req.params.reviewId);
 
-  if (review.userId !== req.user.id) {
-    return res.status(403).json({
-      message: "You are not authorized to perform this action",
-    });
-  }
-
   if (!review) {
     return res.status(404).json({
       message: "Review couldn't be found",
+    });
+  }
+
+  if (review.userId !== req.user.id) {
+    return res.status(403).json({
+      message: "You are not authorized to perform this action",
     });
   }
 

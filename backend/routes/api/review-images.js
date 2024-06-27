@@ -12,14 +12,15 @@ const router = express.Router();
 //delete a review image
 router.delete("/:imageId", requireAuth, async (req, res) => {
   const image = await ReviewImage.findByPk(req.params.imageId);
-  const review = await Review.findByPk(image.reviewId);
-  const owner = await User.findByPk(review.userId);
 
   if (!image) {
     return res.status(404).json({
       message: "Review Image couldn't be found",
     });
   }
+
+  const review = await Review.findByPk(image.reviewId);
+  const owner = await User.findByPk(review.userId);
 
   if (owner.id !== req.user.id) {
     return res.status(403).json({
