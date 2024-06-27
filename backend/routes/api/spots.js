@@ -141,11 +141,11 @@ router.get("/", async (req, res) => {
 router.get("/current", requireAuth, async (req, res) => {
   const userId = req.user.id;
 
-  let userSpots = await Spot.findAll({
+  let Spots = await Spot.findAll({
     where: { ownerId: userId },
   });
 
-  res.status(200).json({ userSpots });
+  res.status(200).json({ Spots });
 });
 
 //get details of a spot by id
@@ -188,7 +188,7 @@ router.post("/", requireAuth, validateCreation, async (req, res) => {
 
   const currentUserId = req.user.id;
 
-  const newSpot = await Spot.create({
+  const spot = await Spot.create({
     ownerId: currentUserId,
     address,
     city,
@@ -201,9 +201,9 @@ router.post("/", requireAuth, validateCreation, async (req, res) => {
     price,
   });
 
-  if (newSpot) {
-    return res.status(201).json({ newSpot });
-  } else if (!newSpot) {
+  if (spot) {
+    return res.status(201).json({ Spot: spot });
+  } else if (!spot) {
     return res.status(400).json({
       error: "error",
     });
@@ -241,7 +241,7 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
       url: newSpotImage.url,
       preview: newSpotImage.preview,
     };
-    return res.status(200).json({ formatSpotImage });
+    return res.status(200).json({ SpotImage: formatSpotImage });
   }
 });
 

@@ -8,6 +8,7 @@ const { Spot } = require("../../db/models");
 const { Review } = require("../../db/models");
 const { User } = require("../../db/models");
 const { ReviewImage } = require("../../db/models");
+const { SpotImage } = require("../../db/models");
 
 const router = express.Router();
 
@@ -26,24 +27,78 @@ const validateReviewCreation = [
 
 //get all reviews of the current user
 router.get("/current", requireAuth, async (req, res) => {
-  try {
-    let reviews = await Review.findAll({
-      where: {
-        userId: req.user.id,
+  let reviews = await Review.findAll({
+    where: {
+      userId: req.user.id,
+    },
+    include: [
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName"],
       },
-    });
-    if (reviews) {
-      return res.status(200).json({
-        Reviews: reviews,
-      });
-    } else if (!reviews) {
-      return res.json({
-        message: "No reviews found for this user",
-      });
+      {
+        model: Spot,
+        attributes: [
+          "id",
+          "ownerId",
+          "address",
+          "city",
+          "state",
+          "country",
+          "lat",
+          "lng",
+          "name",
+          "price",
+        ],
+        include: [
+          {
+            model: SpotImage,
+            attributes: ["url"],
+            where: {
+              preview: true,
+            },
+            required: false,
+          },
+        ],
+      },
+      {
+        model: ReviewImage,
+        attributes: ["id", "url"],
+        as: "ReviewImages",
+      },
+    ],
+  });
+
+  // move previewImage URL to the Spot level
+  let result = reviews.map((review) => {
+    let spot = review.Spot;
+    if (spot && spot.SpotImages && spot.SpotImages.length > 0) {
+      spot.dataValues.previewImage = spot.SpotImages[0].url;
+    } else {
+      spot.dataValues.previewImage = null;
     }
-  } catch (error) {
+    delete spot.dataValues.SpotImages;
+    return {
+      id: review.id,
+      userId: review.userId,
+      spotId: review.spotId,
+      review: review.review,
+      stars: review.stars,
+      createdAt: review.createdAt,
+      updatedAt: review.updatedAt,
+      User: review.User,
+      Spot: spot,
+      ReviewImages: review.ReviewImages,
+    };
+  });
+
+  if (result.length > 0) {
+    return res.status(200).json({
+      Reviews: result,
+    });
+  } else {
     return res.json({
-      message: error,
+      message: "No reviews found for this user",
     });
   }
 });
