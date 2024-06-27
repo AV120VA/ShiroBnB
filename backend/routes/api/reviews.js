@@ -53,6 +53,7 @@ router.get("/current", requireAuth, async (req, res) => {
         include: [
           {
             model: SpotImage,
+            as: "SpotImages",
             attributes: ["url"],
             where: {
               preview: true,
