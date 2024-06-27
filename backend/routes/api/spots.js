@@ -1,7 +1,7 @@
 const express = require("express");
 const { Op } = require("sequelize");
 
-const { check } = require("express-validator");
+const { check, validationResult } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { requireAuth } = require("../../utils/auth");
 
@@ -15,6 +15,7 @@ const { Booking } = require("../../db/models");
 
 const router = express.Router();
 
+//might not use, keep here just in case
 // const validateBookingCreation = [
 //   check("startDate")
 //     .isAfter(new Date())
@@ -85,9 +86,55 @@ const validateCreation = [
 
 //get all spots
 router.get("/", async (req, res) => {
-  const allSpots = await Spot.findAll();
+  const {
+    page = 1,
+    size = 20,
+    minLat,
+    maxLat,
+    minLng,
+    maxLng,
+    minPrice,
+    maxPrice,
+  } = req.query;
 
-  res.status(200).json({ Spots: allSpots });
+  const errors = {};
+
+  if (page < 1 || page > 10)
+    errors.page = "Page must be greater than or equal to 1";
+  if (size < 1 || size > 20)
+    errors.size = "Size must be greater than or equal to 1";
+  if (maxLat && maxLat > 90) errors.maxLat = "Maximum latitude is invalid";
+  if (minLat && minLat < -90) errors.minLat = "Minimum latitude is invalid";
+  if (minLng && minLng < -180) errors.minLng = "Minimum longitude is invalid";
+  if (maxLng && maxLng > 180) errors.maxLng = "Maximum longitude is invalid";
+  if (minPrice && minPrice < 0)
+    errors.minPrice = "Minimum price must be greater than or equal to 0";
+  if (maxPrice && maxPrice < 0)
+    errors.maxPrice = "Maximum price must be greater than or equal to 0";
+
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors,
+    });
+  }
+
+  let where = {};
+
+  if (minLat) where.lat = { ...where.lat, [Op.gte]: parseFloat(minLat) };
+  if (maxLat) where.lat = { ...where.lat, [Op.lte]: parseFloat(maxLat) };
+  if (minLng) where.lng = { ...where.lng, [Op.gte]: parseFloat(minLng) };
+  if (maxLng) where.lng = { ...where.lng, [Op.lte]: parseFloat(maxLng) };
+  if (minPrice)
+    where.price = { ...where.price, [Op.gte]: parseFloat(minPrice) };
+  if (maxPrice)
+    where.price = { ...where.price, [Op.lte]: parseFloat(maxPrice) };
+
+  const limit = parseInt(size);
+  const offset = (parseInt(page) - 1) * limit;
+
+  const spots = await Spot.findAll({ where, limit, offset });
+  res.status(200).json({ Spots: spots, page: parseInt(page), size: limit });
 });
 
 //get all spots owned by current user
