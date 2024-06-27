@@ -224,9 +224,8 @@ router.post("/", requireAuth, validateCreation, async (req, res) => {
 
 router.post("/:spotId/images", requireAuth, async (req, res) => {
   const { url, preview } = req.body;
-  const spot = await Spot.findByPk(req.params.spotId);
 
-  const userId = req.user.id;
+  const spot = await Spot.findByPk(req.params.spotId);
 
   if (!spot) {
     return res.status(404).json({
@@ -234,9 +233,11 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
     });
   }
 
+  const userId = req.user.id;
+
   if (spot.ownerId !== userId) {
     return res.status(403).json({
-      message: "Targeted spot must belong to current user",
+      message: "You are not authorized to perform this action",
     });
   }
 

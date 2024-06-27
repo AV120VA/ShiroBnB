@@ -105,7 +105,14 @@ router.get("/current", requireAuth, async (req, res) => {
 
 //add an image to a review based on the review's id
 router.post("/:reviewId/images", requireAuth, async (req, res) => {
-  let review = await Review.findByPk(req.params.reviewId);
+  let review = await Review.findByPk(req.params.reviewId, {
+    include: [
+      {
+        model: ReviewImage,
+        as: "ReviewImages",
+      },
+    ],
+  });
 
   if (!review) {
     return res.status(404).json({
@@ -119,17 +126,23 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
     });
   }
 
-  let reviewImages = await ReviewImage.findAll({
-    where: {
-      reviewId: review.id,
-    },
-  });
-
-  if (reviewImages.count >= 10) {
+  if (review.ReviewImages.length >= 10) {
     return res.status(403).json({
-      message: "Maximum number of images for this resource was reached",
+      message: "The maximum number of images for this review has been reached",
     });
   }
+
+  // let reviewImages = await ReviewImage.findAll({
+  //   where: {
+  //     reviewId: review.id,
+  //   },
+  // });
+
+  // if (reviewImages.count >= 10) {
+  //   return res.status(403).json({
+  //     message: "Maximum number of images for this resource was reached",
+  //   });
+  // }
 
   let newImage = await ReviewImage.create({
     reviewId: review.id,
