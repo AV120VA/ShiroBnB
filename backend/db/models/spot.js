@@ -49,10 +49,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: [1, 50],
-          isAlpha: {
-            args: true,
-            msg: "State must contain only letters.",
-          },
           notEmpty: true,
         },
       },

@@ -186,28 +186,38 @@ router.post("/", requireAuth, validateCreation, async (req, res) => {
   const { address, city, state, country, lat, lng, name, description, price } =
     req.body;
 
-  const currentUserId = req.user.id;
+  const formattedLat = parseFloat(lat);
+  const formattedLng = parseFloat(lng);
+  const formattedPrice = parseFloat(price);
 
   const spot = await Spot.create({
-    ownerId: currentUserId,
+    ownerId: req.user.id,
     address,
     city,
     state,
     country,
-    lat,
-    lng,
+    lat: formattedLat,
+    lng: formattedLng,
     name,
     description,
-    price,
+    price: formattedPrice,
   });
 
-  if (spot) {
-    return res.status(201).json({ Spot: spot });
-  } else if (!spot) {
-    return res.status(400).json({
-      error: "error",
-    });
-  }
+  return res.status(201).json({
+    id: spot.id,
+    ownerId: spot.ownerId,
+    address: spot.address,
+    city: spot.city,
+    state: spot.state,
+    country: spot.country,
+    lat: formattedLat,
+    lng: formattedLng,
+    name: spot.name,
+    description: spot.description,
+    price: formattedPrice,
+    createdAt: spot.createdAt,
+    updatedAt: spot.updatedAt,
+  });
 });
 
 //add an image to a spot based on the spot id
