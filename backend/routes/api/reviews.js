@@ -154,6 +154,14 @@ router.put(
   async (req, res) => {
     const { review, stars } = req.body;
 
+    let targetReview = await Review.findByPk(req.params.reviewId);
+
+    if (!targetReview) {
+      return res.status(404).json({
+        message: "Review couldn't be found",
+      });
+    }
+
     let errors = {};
 
     if (review.length <= 0) {
@@ -168,14 +176,6 @@ router.put(
       return res.status(400).json({
         message: "Bad Request",
         errors,
-      });
-    }
-
-    let targetReview = await Review.findByPk(req.params.reviewId);
-
-    if (!review) {
-      return res.status(400).json({
-        message: "Review couldn't be found",
       });
     }
 

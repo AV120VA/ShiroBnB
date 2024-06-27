@@ -358,6 +358,19 @@ router.post(
       });
     }
 
+    let checkReviews = await Review.findAll({
+      where: {
+        userId: req.user.id,
+        spotId: spot.id,
+      },
+    });
+
+    if (checkReviews.length > 0) {
+      return res.status(403).json({
+        message: "You have already left a review on this spot",
+      });
+    }
+
     let newReview = await Review.create({
       userId: req.user.id,
       spotId: req.params.spotId,
@@ -422,8 +435,8 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
     });
   }
 
-  if (spot.userId === req.user.id) {
-    return res.status(400).json({
+  if (spot.ownerId === req.user.id) {
+    return res.status(403).json({
       message: "You cannot book your own spot",
     });
   }
