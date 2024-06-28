@@ -5,12 +5,16 @@ const { check, validationResult } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { requireAuth } = require("../../utils/auth");
 
-const { Spot } = require("../../db/models");
-const { SpotImage } = require("../../db/models");
-const { User } = require("../../db/models");
-const { Review } = require("../../db/models");
-const { ReviewImage } = require("../../db/models");
-const { Booking } = require("../../db/models");
+const {
+  Spot,
+  SpotImage,
+  User,
+  Review,
+  ReviewImage,
+  Booking,
+  sequelize,
+} = require("../../db/models");
+
 // const { handle } = require("express/lib/router");
 
 const router = express.Router();
@@ -134,7 +138,36 @@ router.get("/", async (req, res) => {
   const offset = (parseInt(page) - 1) * limit;
 
   const spots = await Spot.findAll({ where, limit, offset });
-  res.status(200).json({ Spots: spots, page: parseInt(page), size: limit });
+
+  const formattedSpots = await Promise.all(
+    spots.map(async (spot) => {
+      const avgRating = await Review.findOne({
+        where: { spotId: spot.id },
+        attributes: [
+          [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
+        ],
+      });
+
+      const previewImage = await SpotImage.findOne({
+        where: {
+          spotId: spot.id,
+          preview: true,
+        },
+        attributes: ["url"],
+      });
+
+      return {
+        ...spot.toJSON(),
+        avgRating:
+          parseFloat(avgRating.dataValues.avgRating).toFixed(1) || null,
+        previewImage: previewImage ? previewImage.url : null,
+      };
+    })
+  );
+
+  res
+    .status(200)
+    .json({ Spots: formattedSpots, page: parseInt(page), size: limit });
 });
 
 //get all spots owned by current user
