@@ -190,6 +190,8 @@ router.put(
 
     await targetReview.validate();
 
+    await targetReview.save();
+
     return res.status(200).json({
       targetReview,
     });

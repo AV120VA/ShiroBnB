@@ -289,6 +289,8 @@ router.put("/:spotId", requireAuth, async (req, res) => {
 
     await spot.validate();
 
+    await spot.save();
+
     return res.status(200).json(spot);
   }
 });
