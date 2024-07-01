@@ -141,11 +141,12 @@ router.get("/", async (req, res) => {
 
   const formattedSpots = await Promise.all(
     spots.map(async (spot) => {
-      const avgRating = await Review.findOne({
+      const avgRatingData = await Review.findOne({
         where: { spotId: spot.id },
         attributes: [
           [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
         ],
+        raw: true,
       });
 
       const previewImage = await SpotImage.findOne({
@@ -156,10 +157,14 @@ router.get("/", async (req, res) => {
         attributes: ["url"],
       });
 
+      const avgRating =
+        avgRatingData && avgRatingData.avgRating
+          ? parseFloat(avgRatingData.avgRating).toFixed(1)
+          : "No reviews yet";
+
       return {
         ...spot.toJSON(),
-        avgRating:
-          parseFloat(avgRating.dataValues.avgRating).toFixed(1) || null,
+        avgRating,
         previewImage: previewImage ? previewImage.url : null,
       };
     })
@@ -180,11 +185,12 @@ router.get("/current", requireAuth, async (req, res) => {
 
   const formattedSpots = await Promise.all(
     spots.map(async (spot) => {
-      const avgRating = await Review.findOne({
+      const avgRatingData = await Review.findOne({
         where: { spotId: spot.id },
         attributes: [
           [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
         ],
+        raw: true,
       });
 
       const previewImage = await SpotImage.findOne({
@@ -195,11 +201,14 @@ router.get("/current", requireAuth, async (req, res) => {
         attributes: ["url"],
       });
 
+      const avgRating =
+        avgRatingData && avgRatingData.avgRating
+          ? parseFloat(avgRatingData.avgRating).toFixed(1)
+          : "No reviews yet";
+
       return {
         ...spot.toJSON(),
-        avgRating: avgRating
-          ? parseFloat(avgRating.dataValues.avgRating).toFixed(1)
-          : null,
+        avgRating,
         previewImage: previewImage ? previewImage.url : null,
       };
     })
@@ -232,23 +241,27 @@ router.get("/:spotId", async (req, res) => {
     attributes: ["id", "firstName", "lastName"],
   });
 
-  const avgRating = await Review.findOne({
+  const avgRatingData = await Review.findOne({
     where: { spotId: spot.id },
     attributes: [
       [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
     ],
+    raw: true,
   });
 
   const numReviews = await Review.count({
     where: { spotId: spot.id },
   });
 
+  const avgStarRating =
+    avgRatingData && avgRatingData.avgStarRating
+      ? parseFloat(avgRatingData.avgStarRating).toFixed(1)
+      : "No reviews yet";
+
   const response = {
     ...spot.toJSON(),
     numReviews: numReviews,
-    avgStarRating: avgRating
-      ? parseFloat(avgRating.dataValues.avgStarRating).toFixed(1)
-      : null,
+    avgStarRating: avgStarRating,
     SpotImages: spotImages,
     Owner: owner ? owner.toJSON() : null,
   };
