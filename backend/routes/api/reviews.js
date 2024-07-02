@@ -85,7 +85,7 @@ router.get("/current", requireAuth, async (req, res) => {
     ],
   });
 
-  // Format reviews and include User, Spot, and ReviewImages
+  // Format reviews, include User, Spot, and ReviewImages
   const formattedReviews = reviews.map((review) => ({
     id: review.id,
     userId: review.userId,
@@ -213,7 +213,7 @@ router.put(
 
     await targetReview.save();
 
-    // Format createdAt and updatedAt for the updated review
+    // Format createdAt and updatedAt 
     const formattedReview = {
       ...targetReview.toJSON(),
       createdAt: formatDate(targetReview.createdAt),

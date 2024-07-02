@@ -94,10 +94,10 @@ router.get("/current", requireAuth, async (req, res) => {
               previewImage: spot.previewImage,
             },
             userId: booking.userId,
-            startDate: formatDate2(booking.startDate), // Format startDate without time
-            endDate: formatDate2(booking.endDate), // Format endDate without time
-            createdAt: formatDate(booking.createdAt), // Keep createdAt with time
-            updatedAt: formatDate(booking.updatedAt), // Keep updatedAt with time
+            startDate: formatDate2(booking.startDate),
+            endDate: formatDate2(booking.endDate),
+            createdAt: formatDate(booking.createdAt),
+            updatedAt: formatDate(booking.updatedAt),
           };
         })
       );
@@ -201,9 +201,9 @@ router.put("/:bookingId", requireAuth, async (req, res) => {
     });
   }
 
-  // Update the booking
-  booking.startDate = formattedStartDate.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
-  booking.endDate = formattedEndDate.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
+  // Update the booking w conversion
+  booking.startDate = formattedStartDate.toISOString().split("T")[0];
+  booking.endDate = formattedEndDate.toISOString().split("T")[0];
   await booking.save();
 
   // Format createdAt and updatedAt

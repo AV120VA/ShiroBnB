@@ -15,7 +15,7 @@ const {
   sequelize,
 } = require("../../db/models");
 
-// const { handle } = require("express/lib/router");
+// const { handle } = require("express/lib/router"); idk where this came from, ignore unless theres an issue
 
 const router = express.Router();
 
@@ -456,7 +456,7 @@ router.put("/:spotId", requireAuth, async (req, res) => {
     await spot.validate();
     await spot.save();
 
-    // Format dates before sending the response
+    // Format dates
     const formattedSpot = {
       ...spot.toJSON(),
       createdAt: formatDate(spot.createdAt),
@@ -509,7 +509,7 @@ router.get("/:spotId/reviews", async (req, res) => {
       },
       include: [
         {
-          model: User, // Include User model to fetch user details
+          model: User,
           attributes: ["id", "firstName", "lastName"],
         },
         {
@@ -519,7 +519,7 @@ router.get("/:spotId/reviews", async (req, res) => {
       ],
     });
 
-    // Format createdAt and updatedAt for each review and ReviewImage
+    // Format createdAt and updatedAt
     const formattedReviews = reviews.map((review) => ({
       id: review.id,
       userId: review.userId,
@@ -529,7 +529,7 @@ router.get("/:spotId/reviews", async (req, res) => {
       createdAt: formatDate(review.createdAt),
       updatedAt: formatDate(review.updatedAt),
       User: {
-        // Extract user details from included User model
+
         id: review.User.id,
         firstName: review.User.firstName,
         lastName: review.User.lastName,
@@ -581,7 +581,7 @@ router.post(
       stars: req.body.stars,
     });
 
-    // Format createdAt and updatedAt for the new review
+    // Format createdAt and updatedAt
     const formattedReview = {
       ...newReview.toJSON(),
       createdAt: formatDate(newReview.createdAt),
@@ -671,7 +671,7 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
   let formattedStartDate = new Date(req.body.startDate);
   let formattedEndDate = new Date(req.body.endDate);
 
-  // validating date conditional
+
   if (formattedStartDate < currentDate) {
     return res.status(400).json({
       message: "Bad Request",
