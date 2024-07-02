@@ -468,20 +468,24 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
 //get all reviews by a spot's id
 
 router.get("/:spotId/reviews", async (req, res) => {
-  let spot = await Spot.findByPk(req.params.spotId);
+  try {
+    let spot = await Spot.findByPk(req.params.spotId);
 
-  if (!spot) {
-    return res.status(404).json({
-      message: "Spot couldn't be found",
-    });
-  }
+    if (!spot) {
+      return res.status(404).json({
+        message: "Spot couldn't be found",
+      });
+    }
 
-  if (spot) {
     let reviews = await Review.findAll({
       where: {
         spotId: spot.id,
       },
       include: [
+        {
+          model: User, // Include User model to fetch user details
+          attributes: ["id", "firstName", "lastName"],
+        },
         {
           model: ReviewImage,
           as: "ReviewImages",
@@ -491,17 +495,29 @@ router.get("/:spotId/reviews", async (req, res) => {
 
     // Format createdAt and updatedAt for each review and ReviewImage
     const formattedReviews = reviews.map((review) => ({
-      ...review.toJSON(),
+      id: review.id,
+      userId: review.userId,
+      spotId: review.spotId,
+      review: review.review,
+      stars: review.stars,
       createdAt: formatDate(review.createdAt),
       updatedAt: formatDate(review.updatedAt),
+      User: {
+        // Extract user details from included User model
+        id: review.User.id,
+        firstName: review.User.firstName,
+        lastName: review.User.lastName,
+      },
       ReviewImages: review.ReviewImages.map((image) => ({
-        ...image.toJSON(),
-        createdAt: formatDate(image.createdAt),
-        updatedAt: formatDate(image.updatedAt),
+        id: image.id,
+        url: image.url,
       })),
     }));
 
     return res.status(200).json({ Reviews: formattedReviews });
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 

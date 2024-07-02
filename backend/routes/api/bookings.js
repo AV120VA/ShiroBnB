@@ -8,6 +8,7 @@ const { Booking } = require("../../db/models");
 const { Spot } = require("../../db/models");
 const { User } = require("../../db/models");
 const { SpotImage } = require("../../db/models");
+const { format } = require("morgan");
 
 const router = express.Router();
 
@@ -26,78 +27,91 @@ const formatDate = (date) => {
   return `${datePart} ${timePart}`;
 };
 
+const formatDate2 = (date) => {
+  return new Date(date)
+    .toLocaleDateString("en-GB")
+    .split("/")
+    .reverse()
+    .join("-");
+};
+
 //get all of the current users bookings
 
 router.get("/current", requireAuth, async (req, res) => {
-  let bookings = await Booking.findAll({
-    where: {
-      userId: req.user.id,
-    },
-    include: {
-      model: Spot,
-      attributes: [
-        "id",
-        "ownerId",
-        "address",
-        "city",
-        "state",
-        "country",
-        "lat",
-        "lng",
-        "name",
-        "price",
-      ],
-    },
-  });
+  try {
+    let bookings = await Booking.findAll({
+      where: {
+        userId: req.user.id,
+      },
+      include: {
+        model: Spot,
+        attributes: [
+          "id",
+          "ownerId",
+          "address",
+          "city",
+          "state",
+          "country",
+          "lat",
+          "lng",
+          "name",
+          "price",
+        ],
+      },
+    });
 
-  if (bookings.length > 0) {
-    const formattedBookings = await Promise.all(
-      bookings.map(async (booking) => {
-        const spot = booking.Spot.toJSON();
+    if (bookings.length > 0) {
+      const formattedBookings = await Promise.all(
+        bookings.map(async (booking) => {
+          const spot = booking.Spot.toJSON();
 
-        const previewImage = await SpotImage.findOne({
-          where: {
-            spotId: spot.id,
-            preview: true,
-          },
-          attributes: ["url"],
-        });
+          const previewImage = await SpotImage.findOne({
+            where: {
+              spotId: spot.id,
+              preview: true,
+            },
+            attributes: ["url"],
+          });
 
-        spot.previewImage = previewImage
-          ? previewImage.url
-          : "No preview image yet";
+          spot.previewImage = previewImage
+            ? previewImage.url
+            : "No preview image yet";
 
-        return {
-          id: booking.id,
-          spotId: booking.spotId,
-          Spot: {
-            id: spot.id,
-            ownerId: spot.ownerId,
-            address: spot.address,
-            city: spot.city,
-            state: spot.state,
-            country: spot.country,
-            lat: spot.lat,
-            lng: spot.lng,
-            name: spot.name,
-            price: spot.price,
-            previewImage: spot.previewImage,
-          },
-          userId: booking.userId,
-          startDate: booking.startDate,
-          endDate: booking.endDate,
-          createdAt: formatDate(booking.createdAt),
-          updatedAt: formatDate(booking.updatedAt),
-        };
-      })
-    );
+          return {
+            id: booking.id,
+            spotId: booking.spotId,
+            Spot: {
+              id: spot.id,
+              ownerId: spot.ownerId,
+              address: spot.address,
+              city: spot.city,
+              state: spot.state,
+              country: spot.country,
+              lat: spot.lat,
+              lng: spot.lng,
+              name: spot.name,
+              price: spot.price,
+              previewImage: spot.previewImage,
+            },
+            userId: booking.userId,
+            startDate: formatDate2(booking.startDate), // Format startDate without time
+            endDate: formatDate2(booking.endDate), // Format endDate without time
+            createdAt: formatDate(booking.createdAt), // Keep createdAt with time
+            updatedAt: formatDate(booking.updatedAt), // Keep updatedAt with time
+          };
+        })
+      );
 
-    return res.status(200).json({ Bookings: formattedBookings });
+      return res.status(200).json({ Bookings: formattedBookings });
+    }
+
+    return res.status(404).json({
+      message: "You have no bookings",
+    });
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
-
-  return res.status(404).json({
-    message: "You have no bookings",
-  });
 });
 
 //

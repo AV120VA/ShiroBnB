@@ -69,7 +69,7 @@ router.get("/current", requireAuth, async (req, res) => {
           {
             model: SpotImage,
             as: "SpotImages",
-            attributes: ["url"],
+            attributes: ["id", "url"],
             where: {
               preview: true,
             },
@@ -85,11 +85,40 @@ router.get("/current", requireAuth, async (req, res) => {
     ],
   });
 
-  // Format createdAt and updatedAt for each review
+  // Format reviews and include User, Spot, and ReviewImages
   const formattedReviews = reviews.map((review) => ({
-    ...review.toJSON(),
+    id: review.id,
+    userId: review.userId,
+    spotId: review.spotId,
+    review: review.review,
+    stars: review.stars,
     createdAt: formatDate(review.createdAt),
     updatedAt: formatDate(review.updatedAt),
+    User: {
+      id: review.User.id,
+      firstName: review.User.firstName,
+      lastName: review.User.lastName,
+    },
+    Spot: {
+      id: review.Spot.id,
+      ownerId: review.Spot.ownerId,
+      address: review.Spot.address,
+      city: review.Spot.city,
+      state: review.Spot.state,
+      country: review.Spot.country,
+      lat: review.Spot.lat,
+      lng: review.Spot.lng,
+      name: review.Spot.name,
+      price: review.Spot.price,
+      previewImage:
+        review.Spot.SpotImages.length > 0
+          ? review.Spot.SpotImages[0].url
+          : "No preview image yet",
+    },
+    ReviewImages: review.ReviewImages.map((image) => ({
+      id: image.id,
+      url: image.url,
+    })),
   }));
 
   return res.status(200).json({ Reviews: formattedReviews });
