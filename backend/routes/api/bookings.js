@@ -7,26 +7,97 @@ const { Op } = require("sequelize");
 const { Booking } = require("../../db/models");
 const { Spot } = require("../../db/models");
 const { User } = require("../../db/models");
+const { SpotImage } = require("../../db/models");
 
 const router = express.Router();
 
+const formatDate = (date) => {
+  const datePart = new Date(date)
+    .toLocaleDateString("en-GB")
+    .split("/")
+    .reverse()
+    .join("-");
+  const timePart = new Date(date).toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+  return `${datePart} ${timePart}`;
+};
+
 //get all of the current users bookings
+
 router.get("/current", requireAuth, async (req, res) => {
   let bookings = await Booking.findAll({
     where: {
       userId: req.user.id,
     },
+    include: {
+      model: Spot,
+      attributes: [
+        "id",
+        "ownerId",
+        "address",
+        "city",
+        "state",
+        "country",
+        "lat",
+        "lng",
+        "name",
+        "price",
+      ],
+    },
   });
 
-  if (bookings) {
-    return res.status(200).json({ Bookings: bookings });
+  if (bookings.length > 0) {
+    const formattedBookings = await Promise.all(
+      bookings.map(async (booking) => {
+        const spot = booking.Spot.toJSON();
+
+        const previewImage = await SpotImage.findOne({
+          where: {
+            spotId: spot.id,
+            preview: true,
+          },
+          attributes: ["url"],
+        });
+
+        spot.previewImage = previewImage
+          ? previewImage.url
+          : "No preview image yet";
+
+        return {
+          id: booking.id,
+          spotId: booking.spotId,
+          Spot: {
+            id: spot.id,
+            ownerId: spot.ownerId,
+            address: spot.address,
+            city: spot.city,
+            state: spot.state,
+            country: spot.country,
+            lat: spot.lat,
+            lng: spot.lng,
+            name: spot.name,
+            price: spot.price,
+            previewImage: spot.previewImage,
+          },
+          userId: booking.userId,
+          startDate: booking.startDate,
+          endDate: booking.endDate,
+          createdAt: formatDate(booking.createdAt),
+          updatedAt: formatDate(booking.updatedAt),
+        };
+      })
+    );
+
+    return res.status(200).json({ Bookings: formattedBookings });
   }
 
-  if (!bookings) {
-    return res.status(404).json({
-      message: "You have no bookings",
-    });
-  }
+  return res.status(404).json({
+    message: "You have no bookings",
+  });
 });
 
 //
