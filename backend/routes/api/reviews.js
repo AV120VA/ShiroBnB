@@ -12,6 +12,21 @@ const { SpotImage } = require("../../db/models");
 
 const router = express.Router();
 
+const formatDate = (date) => {
+  const datePart = new Date(date)
+    .toLocaleDateString("en-GB")
+    .split("/")
+    .reverse()
+    .join("-");
+  const timePart = new Date(date).toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+  return `${datePart} ${timePart}`;
+};
+
 const validateReviewCreation = [
   check("review")
     .exists({ checkFalsy: true })
@@ -70,38 +85,14 @@ router.get("/current", requireAuth, async (req, res) => {
     ],
   });
 
-  // move previewImage URL to the Spot level
-  let result = reviews.map((review) => {
-    let spot = review.Spot;
-    if (spot && spot.SpotImages && spot.SpotImages.length > 0) {
-      spot.dataValues.previewImage = spot.SpotImages[0].url;
-    } else {
-      spot.dataValues.previewImage = null;
-    }
-    delete spot.dataValues.SpotImages;
-    return {
-      id: review.id,
-      userId: review.userId,
-      spotId: review.spotId,
-      review: review.review,
-      stars: review.stars,
-      createdAt: review.createdAt,
-      updatedAt: review.updatedAt,
-      User: review.User,
-      Spot: spot,
-      ReviewImages: review.ReviewImages,
-    };
-  });
+  // Format createdAt and updatedAt for each review
+  const formattedReviews = reviews.map((review) => ({
+    ...review.toJSON(),
+    createdAt: formatDate(review.createdAt),
+    updatedAt: formatDate(review.updatedAt),
+  }));
 
-  if (result.length > 0) {
-    return res.status(200).json({
-      Reviews: result,
-    });
-  } else {
-    return res.json({
-      message: "No reviews found for this user",
-    });
-  }
+  return res.status(200).json({ Reviews: formattedReviews });
 });
 
 //add an image to a review based on the review's id
@@ -147,6 +138,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
 });
 
 //edit a review
+
 router.put(
   "/:reviewId",
   validateReviewCreation,
@@ -192,9 +184,14 @@ router.put(
 
     await targetReview.save();
 
-    return res.status(200).json({
-      targetReview,
-    });
+    // Format createdAt and updatedAt for the updated review
+    const formattedReview = {
+      ...targetReview.toJSON(),
+      createdAt: formatDate(targetReview.createdAt),
+      updatedAt: formatDate(targetReview.updatedAt),
+    };
+
+    return res.status(200).json(formattedReview);
   }
 );
 

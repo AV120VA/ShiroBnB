@@ -319,7 +319,7 @@ router.post("/", requireAuth, validateCreation, async (req, res) => {
     price: formattedPrice,
   });
 
-  return res.status(201).json({
+  const formattedSpot = {
     id: spot.id,
     ownerId: spot.ownerId,
     address: spot.address,
@@ -331,9 +331,11 @@ router.post("/", requireAuth, validateCreation, async (req, res) => {
     name: spot.name,
     description: spot.description,
     price: formattedPrice,
-    createdAt: spot.createdAt,
-    updatedAt: spot.updatedAt,
-  });
+    createdAt: formatDate(spot.createdAt),
+    updatedAt: formatDate(spot.updatedAt),
+  };
+
+  return res.status(201).json(formattedSpot);
 });
 
 //add an image to a spot based on the spot id
@@ -373,6 +375,7 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
 });
 
 //edit a spot
+
 router.put("/:spotId", requireAuth, async (req, res) => {
   const spot = await Spot.findByPk(req.params.spotId);
 
@@ -404,10 +407,16 @@ router.put("/:spotId", requireAuth, async (req, res) => {
     if (price) spot.price = price;
 
     await spot.validate();
-
     await spot.save();
 
-    return res.status(200).json(spot);
+    // Format dates before sending the response
+    const formattedSpot = {
+      ...spot.toJSON(),
+      createdAt: formatDate(spot.createdAt),
+      updatedAt: formatDate(spot.updatedAt),
+    };
+
+    return res.status(200).json(formattedSpot);
   }
 });
 
@@ -436,6 +445,7 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
 });
 
 //get all reviews by a spot's id
+
 router.get("/:spotId/reviews", async (req, res) => {
   let spot = await Spot.findByPk(req.params.spotId);
 
@@ -458,7 +468,19 @@ router.get("/:spotId/reviews", async (req, res) => {
       ],
     });
 
-    return res.status(200).json({ Reviews: reviews });
+    // Format createdAt and updatedAt for each review and ReviewImage
+    const formattedReviews = reviews.map((review) => ({
+      ...review.toJSON(),
+      createdAt: formatDate(review.createdAt),
+      updatedAt: formatDate(review.updatedAt),
+      ReviewImages: review.ReviewImages.map((image) => ({
+        ...image.toJSON(),
+        createdAt: formatDate(image.createdAt),
+        updatedAt: formatDate(image.updatedAt),
+      })),
+    }));
+
+    return res.status(200).json({ Reviews: formattedReviews });
   }
 });
 
@@ -496,7 +518,14 @@ router.post(
       stars: req.body.stars,
     });
 
-    return res.status(201).json({ ...newReview.toJSON() });
+    // Format createdAt and updatedAt for the new review
+    const formattedReview = {
+      ...newReview.toJSON(),
+      createdAt: formatDate(newReview.createdAt),
+      updatedAt: formatDate(newReview.updatedAt),
+    };
+
+    return res.status(201).json(formattedReview);
   }
 );
 
