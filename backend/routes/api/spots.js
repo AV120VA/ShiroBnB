@@ -30,6 +30,21 @@ const router = express.Router();
 //   handleValidationErrors,
 // ];
 
+const formatDate = (date) => {
+  const datePart = new Date(date)
+    .toLocaleDateString("en-GB")
+    .split("/")
+    .reverse()
+    .join("-");
+  const timePart = new Date(date).toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+  return `${datePart} ${timePart}`;
+};
+
 const validateReviewCreation = [
   check("review")
     .exists({ checkFalsy: true })
@@ -162,11 +177,16 @@ router.get("/", async (req, res) => {
           ? parseFloat(avgRatingData.avgRating).toFixed(1)
           : "No reviews yet";
 
-      return {
+      const formattedSpot = {
         ...spot.toJSON(),
         avgRating,
         previewImage: previewImage ? previewImage.url : "No preview image yet",
       };
+
+      formattedSpot.createdAt = formatDate(spot.createdAt);
+      formattedSpot.updatedAt = formatDate(spot.updatedAt);
+
+      return formattedSpot;
     })
   );
 
@@ -206,11 +226,16 @@ router.get("/current", requireAuth, async (req, res) => {
           ? parseFloat(avgRatingData.avgRating).toFixed(1)
           : "No reviews yet";
 
-      return {
+      const formattedSpot = {
         ...spot.toJSON(),
         avgRating,
         previewImage: previewImage ? previewImage.url : "No preview image yet",
       };
+
+      formattedSpot.createdAt = formatDate(spot.createdAt);
+      formattedSpot.updatedAt = formatDate(spot.updatedAt);
+
+      return formattedSpot;
     })
   );
 
@@ -265,6 +290,9 @@ router.get("/:spotId", async (req, res) => {
     SpotImages: spotImages,
     Owner: owner ? owner.toJSON() : null,
   };
+
+  response.createdAt = formatDate(response.createdAt);
+  response.updatedAt = formatDate(response.updatedAt);
 
   return res.status(200).json(response);
 });
