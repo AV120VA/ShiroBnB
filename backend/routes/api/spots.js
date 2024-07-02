@@ -165,7 +165,7 @@ router.get("/", async (req, res) => {
       return {
         ...spot.toJSON(),
         avgRating,
-        previewImage: previewImage ? previewImage.url : null,
+        previewImage: previewImage ? previewImage.url : "No preview image yet",
       };
     })
   );
@@ -209,7 +209,7 @@ router.get("/current", requireAuth, async (req, res) => {
       return {
         ...spot.toJSON(),
         avgRating,
-        previewImage: previewImage ? previewImage.url : null,
+        previewImage: previewImage ? previewImage.url : "No preview image yet",
       };
     })
   );
