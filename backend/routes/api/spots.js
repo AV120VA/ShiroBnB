@@ -525,22 +525,24 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
     ],
   });
 
-  if (spot.ownerId !== user.id) {
-    return res.status(200).json({
-      Bookings: bookings,
-    });
-  }
+  const formattedBookings = bookings.map((booking) => ({
+    User: {
+      id: booking.User.id,
+      firstName: booking.User.firstName,
+      lastName: booking.User.lastName,
+    },
+    id: booking.id,
+    spotId: booking.spotId,
+    userId: booking.userId,
+    startDate: booking.startDate,
+    endDate: booking.endDate,
+    createdAt: formatDate(booking.createdAt),
+    updatedAt: formatDate(booking.updatedAt),
+  }));
 
-  if (spot.ownerId === user.id) {
-    const formattedBookings = bookings.map((booking) => {
-      const { User, ...bookingData } = booking.toJSON();
-      return { User, ...bookingData };
-    });
-
-    return res.status(200).json({
-      Bookings: formattedBookings,
-    });
-  }
+  return res.status(200).json({
+    Bookings: formattedBookings,
+  });
 });
 
 //create a booking from a spot based on the spots id
