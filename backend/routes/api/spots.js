@@ -181,7 +181,9 @@ router.get("/", async (req, res) => {
         const formattedSpot = {
           ...spot.toJSON(),
           avgRating:
-            avgRating !== null ? parseFloat(avgRating.toFixed(1)) : null,
+            avgRating !== null
+              ? parseFloat(avgRating.toFixed(1))
+              : "No reviews yet",
           previewImage: previewImage
             ? previewImage.url
             : "No preview image yet",
@@ -237,7 +239,9 @@ router.get("/current", requireAuth, async (req, res) => {
         const formattedSpot = {
           ...spot.toJSON(),
           avgRating:
-            avgRating !== null ? parseFloat(avgRating.toFixed(1)) : null,
+            avgRating !== null
+              ? parseFloat(avgRating.toFixed(1))
+              : "No reviews yet",
           previewImage: previewImage
             ? previewImage.url
             : "No preview image yet",
@@ -302,7 +306,9 @@ router.get("/:spotId", async (req, res) => {
       ...spot.toJSON(),
       numReviews: numReviews,
       avgStarRating:
-        avgStarRating !== null ? parseFloat(avgStarRating.toFixed(1)) : null,
+        avgStarRating !== null
+          ? parseFloat(avgStarRating.toFixed(1))
+          : "No reviews yet",
       SpotImages: spotImages,
       Owner: owner ? owner.toJSON() : null,
     };
