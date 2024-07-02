@@ -152,94 +152,108 @@ router.get("/", async (req, res) => {
   const limit = parseInt(size);
   const offset = (parseInt(page) - 1) * limit;
 
-  const spots = await Spot.findAll({ where, limit, offset });
+  try {
+    const spots = await Spot.findAll({ where, limit, offset });
 
-  const formattedSpots = await Promise.all(
-    spots.map(async (spot) => {
-      const avgRatingData = await Review.findOne({
-        where: { spotId: spot.id },
-        attributes: [
-          [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
-        ],
-        raw: true,
-      });
+    const formattedSpots = await Promise.all(
+      spots.map(async (spot) => {
+        const avgRatingData = await Review.findOne({
+          where: { spotId: spot.id },
+          attributes: [
+            [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
+          ],
+          raw: true,
+        });
 
-      const previewImage = await SpotImage.findOne({
-        where: {
-          spotId: spot.id,
-          preview: true,
-        },
-        attributes: ["url"],
-      });
+        const previewImage = await SpotImage.findOne({
+          where: {
+            spotId: spot.id,
+            preview: true,
+          },
+          attributes: ["url"],
+        });
 
-      const avgRating =
-        avgRatingData && avgRatingData.avgRating
-          ? parseFloat(avgRatingData.avgRating).toFixed(1)
-          : "No reviews yet";
+        const avgRating =
+          avgRatingData && avgRatingData.avgRating !== null
+            ? parseFloat(avgRatingData.avgRating)
+            : null;
 
-      const formattedSpot = {
-        ...spot.toJSON(),
-        avgRating,
-        previewImage: previewImage ? previewImage.url : "No preview image yet",
-      };
+        const formattedSpot = {
+          ...spot.toJSON(),
+          avgRating:
+            avgRating !== null ? parseFloat(avgRating.toFixed(1)) : null,
+          previewImage: previewImage
+            ? previewImage.url
+            : "No preview image yet",
+          createdAt: formatDate(spot.createdAt),
+          updatedAt: formatDate(spot.updatedAt),
+        };
 
-      formattedSpot.createdAt = formatDate(spot.createdAt);
-      formattedSpot.updatedAt = formatDate(spot.updatedAt);
+        return formattedSpot;
+      })
+    );
 
-      return formattedSpot;
-    })
-  );
-
-  res
-    .status(200)
-    .json({ Spots: formattedSpots, page: parseInt(page), size: limit });
+    res
+      .status(200)
+      .json({ Spots: formattedSpots, page: parseInt(page), size: limit });
+  } catch (error) {
+    console.error("Error fetching spots:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
-//get all spots owned by current user
+//get all spots of current user
 router.get("/current", requireAuth, async (req, res) => {
   const userId = req.user.id;
 
-  let spots = await Spot.findAll({
-    where: { ownerId: userId },
-  });
+  try {
+    let spots = await Spot.findAll({
+      where: { ownerId: userId },
+    });
 
-  const formattedSpots = await Promise.all(
-    spots.map(async (spot) => {
-      const avgRatingData = await Review.findOne({
-        where: { spotId: spot.id },
-        attributes: [
-          [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
-        ],
-        raw: true,
-      });
+    const formattedSpots = await Promise.all(
+      spots.map(async (spot) => {
+        const avgRatingData = await Review.findOne({
+          where: { spotId: spot.id },
+          attributes: [
+            [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
+          ],
+          raw: true,
+        });
 
-      const previewImage = await SpotImage.findOne({
-        where: {
-          spotId: spot.id,
-          preview: true,
-        },
-        attributes: ["url"],
-      });
+        const previewImage = await SpotImage.findOne({
+          where: {
+            spotId: spot.id,
+            preview: true,
+          },
+          attributes: ["url"],
+        });
 
-      const avgRating =
-        avgRatingData && avgRatingData.avgRating
-          ? parseFloat(avgRatingData.avgRating).toFixed(1)
-          : "No reviews yet";
+        const avgRating =
+          avgRatingData && avgRatingData.avgRating !== null
+            ? parseFloat(avgRatingData.avgRating)
+            : null;
 
-      const formattedSpot = {
-        ...spot.toJSON(),
-        avgRating,
-        previewImage: previewImage ? previewImage.url : "No preview image yet",
-      };
+        const formattedSpot = {
+          ...spot.toJSON(),
+          avgRating:
+            avgRating !== null ? parseFloat(avgRating.toFixed(1)) : null,
+          previewImage: previewImage
+            ? previewImage.url
+            : "No preview image yet",
+          createdAt: formatDate(spot.createdAt),
+          updatedAt: formatDate(spot.updatedAt),
+        };
 
-      formattedSpot.createdAt = formatDate(spot.createdAt);
-      formattedSpot.updatedAt = formatDate(spot.updatedAt);
+        return formattedSpot;
+      })
+    );
 
-      return formattedSpot;
-    })
-  );
-
-  res.status(200).json({ Spots: formattedSpots });
+    res.status(200).json({ Spots: formattedSpots });
+  } catch (error) {
+    console.error("Error fetching user's spots:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 //get details of a spot by id
@@ -247,54 +261,60 @@ router.get("/current", requireAuth, async (req, res) => {
 router.get("/:spotId", async (req, res) => {
   const id = req.params.spotId;
 
-  let spot = await Spot.findByPk(id);
+  try {
+    let spot = await Spot.findByPk(id);
 
-  if (!spot) {
-    return res.status(404).json({
-      message: "Spot couldn't be found",
+    if (!spot) {
+      return res.status(404).json({
+        message: "Spot couldn't be found",
+      });
+    }
+
+    let spotImages = await SpotImage.findAll({
+      where: {
+        spotId: id,
+      },
+      attributes: ["id", "url", "preview"],
     });
+
+    let owner = await User.findByPk(spot.ownerId, {
+      attributes: ["id", "firstName", "lastName"],
+    });
+
+    const avgRatingData = await Review.findOne({
+      where: { spotId: spot.id },
+      attributes: [
+        [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
+      ],
+      raw: true,
+    });
+
+    const numReviews = await Review.count({
+      where: { spotId: spot.id },
+    });
+
+    const avgStarRating =
+      avgRatingData && avgRatingData.avgStarRating !== null
+        ? parseFloat(avgRatingData.avgStarRating)
+        : null;
+
+    const response = {
+      ...spot.toJSON(),
+      numReviews: numReviews,
+      avgStarRating:
+        avgStarRating !== null ? parseFloat(avgStarRating.toFixed(1)) : null,
+      SpotImages: spotImages,
+      Owner: owner ? owner.toJSON() : null,
+    };
+
+    response.createdAt = formatDate(response.createdAt);
+    response.updatedAt = formatDate(response.updatedAt);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching spot details:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-
-  let spotImages = await SpotImage.findAll({
-    where: {
-      spotId: id,
-    },
-    attributes: ["id", "url", "preview"],
-  });
-
-  let owner = await User.findByPk(spot.ownerId, {
-    attributes: ["id", "firstName", "lastName"],
-  });
-
-  const avgRatingData = await Review.findOne({
-    where: { spotId: spot.id },
-    attributes: [
-      [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
-    ],
-    raw: true,
-  });
-
-  const numReviews = await Review.count({
-    where: { spotId: spot.id },
-  });
-
-  const avgStarRating =
-    avgRatingData && avgRatingData.avgStarRating
-      ? parseFloat(avgRatingData.avgStarRating).toFixed(1)
-      : "No reviews yet";
-
-  const response = {
-    ...spot.toJSON(),
-    numReviews: numReviews,
-    avgStarRating: avgStarRating,
-    SpotImages: spotImages,
-    Owner: owner ? owner.toJSON() : null,
-  };
-
-  response.createdAt = formatDate(response.createdAt);
-  response.updatedAt = formatDate(response.updatedAt);
-
-  return res.status(200).json(response);
 });
 
 //create a spot
