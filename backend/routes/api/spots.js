@@ -527,7 +527,7 @@ router.post(
     });
 
     if (checkReviews.length > 0) {
-      return res.status(403).json({
+      return res.status(500).json({
         message: "You have already left a review on this spot",
       });
     }
@@ -575,24 +575,38 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
     ],
   });
 
-  const formattedBookings = bookings.map((booking) => ({
-    User: {
-      id: booking.User.id,
-      firstName: booking.User.firstName,
-      lastName: booking.User.lastName,
-    },
-    id: booking.id,
-    spotId: booking.spotId,
-    userId: booking.userId,
-    startDate: booking.startDate,
-    endDate: booking.endDate,
-    createdAt: formatDate(booking.createdAt),
-    updatedAt: formatDate(booking.updatedAt),
-  }));
+  if (spot.id === req.user.id) {
+    const formattedBookings = bookings.map((booking) => ({
+      User: {
+        id: booking.User.id,
+        firstName: booking.User.firstName,
+        lastName: booking.User.lastName,
+      },
+      id: booking.id,
+      spotId: booking.spotId,
+      userId: booking.userId,
+      startDate: booking.startDate,
+      endDate: booking.endDate,
+      createdAt: formatDate(booking.createdAt),
+      updatedAt: formatDate(booking.updatedAt),
+    }));
 
-  return res.status(200).json({
-    Bookings: formattedBookings,
-  });
+    return res.status(200).json({
+      Bookings: formattedBookings,
+    });
+  }
+
+  if (spot.id !== req.user.id) {
+    const formattedBookings = bookings.map((booking) => ({
+      spotId: booking.spotId,
+      startDate: booking.startDate,
+      endDate: booking.endDate,
+    }));
+
+    return res.status(200).json({
+      Bookings: formattedBookings,
+    });
+  }
 });
 
 //create a booking from a spot based on the spots id
