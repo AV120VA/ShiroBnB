@@ -1,0 +1,28 @@
+.profile-dropdown {
+  position: absolute;
+  background-color: white;
+  border: 1px solid black;
+  z-index: 1;
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.profile-dropdown li {
+  padding: 8px 12px;
+}
+
+.profile-dropdown li button {
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+}
+
+.profile-dropdown li button:hover {
+  text-decoration: underline;
+}
