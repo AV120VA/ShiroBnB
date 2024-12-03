@@ -1,15 +1,19 @@
-import { csrfFetch } from "./csrf";
+// USE LATER
+// import { csrfFetch } from "./csrf";
 import { createSelector } from "reselect";
 
 // headers shortcut
-const headers = {
-  "Content-type": "application/json",
-};
+
+// const headers = {
+//   "Content-type": "application/json",
+// };
 
 // Action Types
+
 const LOAD_SPOTS = "spots/loadSpots";
 
 // Action Creators
+
 const loadSpots = (spots) => {
   return {
     type: LOAD_SPOTS,
@@ -20,7 +24,7 @@ const loadSpots = (spots) => {
 // Thunks
 
 export const getAllSpots = () => async (dispatch) => {
-  const response = await fetch("/spots/spots");
+  const response = await fetch("/api/spots");
 
   if (response.ok) {
     const data = await response.json();
@@ -48,5 +52,13 @@ function spotsReducer(state = initialState, action) {
       return state;
   }
 }
+
+// Selectors
+
+export const selectSpots = (state) => state.spots;
+
+export const selectAllSpots = createSelector([selectSpots], (spots) => {
+  return spots ? Object.values(spots) : [];
+});
 
 export default spotsReducer;

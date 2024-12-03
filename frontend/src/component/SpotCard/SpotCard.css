@@ -1,0 +1,8 @@
+.spot-card-img {
+  height: 50px;
+}
+.star {
+  background-color: white;
+  mix-blend-mode: multiply;
+  height: 30px;
+}
