@@ -1,8 +1,27 @@
+.spot-card-container {
+  cursor: pointer;
+  z-index: 0;
+}
+
 .spot-card-img {
-  height: 50px;
+  height: 300px;
+  border-radius: 10px;
 }
 .star {
   background-color: white;
   mix-blend-mode: multiply;
   height: 30px;
+}
+
+.detail-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rating-box {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }

@@ -13,33 +13,33 @@ module.exports = {
     await SpotImage.bulkCreate([
       {
         spotId: 1,
-        url: "image.png",
+        url: "himeji-castle.png",
         preview: "true",
       },
       {
         spotId: 1,
         url: "image.png",
+        preview: "false",
+      },
+      {
+        spotId: 2,
+        url: "okayama-castle.png",
         preview: "true",
       },
       {
         spotId: 2,
         url: "image.png",
-        preview: "true",
+        preview: "false",
       },
       {
-        spotId: 2,
-        url: "image.png",
+        spotId: 3,
+        url: "osaka-castle.png",
         preview: "true",
       },
       {
         spotId: 3,
         url: "image.png",
-        preview: "true",
-      },
-      {
-        spotId: 3,
-        url: "image.png",
-        preview: "true",
+        preview: "false",
       },
     ]);
   },
