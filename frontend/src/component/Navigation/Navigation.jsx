@@ -12,23 +12,25 @@ function Navigation({ isLoaded }) {
   let sessionLinks;
   if (sessionUser) {
     sessionLinks = (
-      <li>
+      <li className="profile-button">
         <ProfileButton user={sessionUser} />
       </li>
     );
   } else {
     sessionLinks = (
       <>
-        <li>
+        <li className="nav-button">
           <OpenModalButton
             buttonText="Log In"
             modalComponent={<LoginFormModal />}
+            className="nav-button"
           />
         </li>
-        <li>
+        <li className="nav-button">
           <OpenModalButton
             buttonText="Sign Up"
             modalComponent={<SignupFormModal />}
+            className="nav-button"
           />
         </li>
       </>
@@ -36,12 +38,12 @@ function Navigation({ isLoaded }) {
   }
 
   return (
-    <ul>
-      <li>
-        <NavLink to="/">Home</NavLink>
-      </li>
-      {isLoaded && sessionLinks}
-    </ul>
+    <div className="nav-container">
+      <NavLink className="logo" to="/">
+        <img className="logo-img" src="logo.png" alt="logo" />
+      </NavLink>
+      <ul className="button-box">{isLoaded && sessionLinks}</ul>
+    </div>
   );
 }
 
