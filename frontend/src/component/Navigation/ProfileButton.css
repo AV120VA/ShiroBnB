@@ -1,11 +1,29 @@
 .profile-dropdown {
   position: absolute;
+  top: 100%;
+  left: 20%;
+  transform: translateX(-50%);
   background-color: white;
   border: 1px solid black;
+  border-radius: 10px;
   z-index: 1;
   list-style: none;
   padding: 10px;
   margin: 0;
+}
+
+.profile-button {
+  position: relative;
+  margin-right: 10px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.user-icon {
+  color: white;
+  font-size: 35px;
 }
 
 .hidden {
@@ -19,7 +37,8 @@
 .profile-dropdown li button {
   background: none;
   border: none;
-  color: blue;
+  margin-left: 23%;
+  color: #23395d;
   cursor: pointer;
 }
 

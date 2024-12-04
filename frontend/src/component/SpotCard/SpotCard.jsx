@@ -27,13 +27,11 @@ function SpotCard({ spot }) {
       <img className="spot-card-img" src={`${imageUrl}`} alt="preview" />
       <div className="detail-box">
         <p className="location">
-          {spot.city},{spot.state}
+          {spot.city}, {spot.state}
         </p>
         <div className="rating-box">
           <img className="star" src="star.png" alt="star" />
-          <p className="rating">
-            {spot.avgStarRating ? spot.avgStarRating : "New"}
-          </p>
+          <p className="rating">{spot.avgRating ? spot.avgRating : "New"}</p>
         </div>
       </div>
       <p className="price">${spot.price} per night</p>

@@ -13,17 +13,18 @@ li {
 .logo-img {
   height: 40px;
   padding: 20px;
+  margin-left: 25px;
 }
 
 .nav-container {
   display: flex;
-  min-height: 80px;
+  min-height: 100px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   height: auto;
   width: 100%;
-  background-color: #4b30e6;
+  background-color: #23395d;
 }
 
 .nav-button {
