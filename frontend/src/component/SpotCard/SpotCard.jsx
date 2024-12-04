@@ -4,7 +4,7 @@ import "./SpotCard.css";
 function SpotCard({ spot }) {
   const navigate = useNavigate();
 
-  const onClick = (event, spotId) => {
+  const onClick = (spotId) => {
     //add stuff for delete and update here with event later
 
     navigate(`/spots/${spotId}`);

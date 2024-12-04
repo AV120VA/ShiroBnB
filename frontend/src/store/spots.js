@@ -11,12 +11,20 @@ import { createSelector } from "reselect";
 // Action Types
 
 const LOAD_SPOTS = "spots/loadSpots";
+const LOAD_SPOT_BY_ID = "spots/loadSpotById";
 
 // Action Creators
 
 const loadSpots = (spots) => {
   return {
     type: LOAD_SPOTS,
+    spots,
+  };
+};
+
+const loadSpotById = (spots) => {
+  return {
+    type: LOAD_SPOT_BY_ID,
     spots,
   };
 };
@@ -35,6 +43,12 @@ export const getAllSpots = () => async (dispatch) => {
   }
 };
 
+export const getSpotById = (spotId) => async (dispatch) => {
+  const response = await fetch(`/api/spots/${spotId}`);
+  const spot = await response.json();
+  dispatch(loadSpotById(spot));
+  return spot;
+};
 // Reducers
 
 const initialState = {};
@@ -47,6 +61,9 @@ function spotsReducer(state = initialState, action) {
         newSpots[spot.id] = spot;
       });
       return newSpots;
+    }
+    case LOAD_SPOT_BY_ID: {
+      return { ...state, spotById: action.spots };
     }
     default:
       return state;
