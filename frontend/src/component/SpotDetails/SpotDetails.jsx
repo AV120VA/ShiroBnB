@@ -20,9 +20,30 @@ function SpotDetail() {
     <>
       {isLoaded && (
         <div className="spot-details-container">
-          <h1>{spot.name}</h1>
+          <h2>{spot.name}</h2>
           <div className="location-details">
             {spot.city}, {spot.state}, {spot.country}
+          </div>
+          <div className="picture-box"></div>
+          <div className="description-reserve">
+            <div className="description">
+              <h2 className="host"> ASK IF WE CAN MODIFY THE BACKEND</h2>
+              <p className="description"> {spot.description} </p>
+            </div>
+            <div className="reserve-card">
+              <div className="review-text">
+                <p className="card-price">${spot.price} night</p>
+                <img src="/star.png" alt="star" className="details-star" />
+                <p className="review-count">{spot.numReviews}</p>
+              </div>
+              <button
+                type="button"
+                className="reserve-button"
+                onClick={() => alert("Feature Coming Soon!")}
+              >
+                Reserve
+              </button>
+            </div>
           </div>
         </div>
       )}
