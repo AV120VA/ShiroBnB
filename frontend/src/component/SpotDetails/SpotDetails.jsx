@@ -27,7 +27,7 @@ function SpotDetail() {
           <div className="picture-box"></div>
           <div className="description-reserve">
             <div className="description">
-              <h2 className="host"> ASK IF WE CAN MODIFY THE BACKEND</h2>
+              <h2 className="host"> ASK ABOUT MODIFYING BACKEND</h2>
               <p className="description"> {spot.description} </p>
             </div>
             <div className="reserve-card">
