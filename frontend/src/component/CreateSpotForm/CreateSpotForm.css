@@ -17,8 +17,22 @@ h3 {
   font-size: 20px;
 }
 
+.error-text {
+  color: red;
+  font-size: 15px;
+  font-weight: bold;
+}
+
 p {
   font-size: 16px;
+}
+
+.label-text {
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 label {
