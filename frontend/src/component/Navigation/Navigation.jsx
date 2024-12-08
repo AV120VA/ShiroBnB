@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProfileButton from "./ProfileButton";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
@@ -7,14 +7,20 @@ import SignupFormModal from "../SignupFormModal/SignupFormModal";
 import "./Navigation.css";
 
 function Navigation({ isLoaded }) {
+  const navigate = useNavigate();
   const sessionUser = useSelector((state) => state.session.user);
 
   let sessionLinks;
   if (sessionUser) {
     sessionLinks = (
-      <li className="profile-button">
-        <ProfileButton user={sessionUser} />
-      </li>
+      <div className="logged-in-user">
+        <li className="nav-button" onClick={() => navigate("/create-spot")}>
+          Create a New Spot
+        </li>
+        <li className="profile-button">
+          <ProfileButton user={sessionUser} />
+        </li>
+      </div>
     );
   } else {
     sessionLinks = (
