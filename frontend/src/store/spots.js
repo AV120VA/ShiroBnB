@@ -10,6 +10,7 @@ const headers = {
 const LOAD_SPOTS = "spots/loadSpots";
 const LOAD_SPOT_BY_ID = "spots/loadSpotById";
 const UPDATE_SPOT = "spots/updateSpot";
+const REMOVE_SPOT = "spots/deleteSpot";
 
 // Action Creators
 
@@ -24,6 +25,13 @@ const loadSpotById = (spots) => {
   return {
     type: LOAD_SPOT_BY_ID,
     spots,
+  };
+};
+
+const removeSpot = (spotId) => {
+  return {
+    type: REMOVE_SPOT,
+    spotId,
   };
 };
 
@@ -66,6 +74,24 @@ export const updateSpot = (spotId, spotData) => async (dispatch) => {
   }
 };
 
+export const deleteSpot = (spotId) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      dispatch(removeSpot(spotId));
+      return response;
+    } else {
+      const error = await response.json();
+      throw new Error(error.message);
+    }
+  } catch (e) {
+    console.log("Unable to delete spot:", e);
+    return e;
+  }
+};
+
 // Reducer
 
 const initialState = {};
@@ -96,6 +122,11 @@ function spotsReducer(state = initialState, action) {
           ...updatedSpot,
         },
       };
+    }
+    case REMOVE_SPOT: {
+      const updatedState = { ...state };
+      delete updatedState[action.spotId];
+      return updatedState;
     }
     default:
       return state;

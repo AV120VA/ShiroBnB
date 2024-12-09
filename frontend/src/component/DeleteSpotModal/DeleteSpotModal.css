@@ -1,0 +1,41 @@
+.delete-modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  border: 4px solid black;
+  border-radius: 2px;
+  padding: 10px;
+  width: fit-content;
+}
+
+.spot-delete-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.spot-delete-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.confirmation-button {
+  width: 90%;
+  height: 50px;
+  border: 2px solid black;
+  color: white;
+  border-radius: 10px;
+}
+
+.confirm-delete {
+  background-color: red;
+}
+
+.cancel-delete {
+  background-color: darkgrey;
+}

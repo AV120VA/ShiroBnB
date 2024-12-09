@@ -1,5 +1,7 @@
 import "./ManageCard.css";
 import { useNavigate } from "react-router-dom";
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
+import DeleteSpotModal from "../DeleteSpotModal/DeleteSpotModal";
 
 function ManageCard({ spot }) {
   const navigate = useNavigate();
@@ -24,7 +26,11 @@ function ManageCard({ spot }) {
         >
           Update
         </button>
-        <button className="manage-button">Delete</button>
+        <OpenModalButton
+          buttonText="Delete"
+          modalComponent={<DeleteSpotModal spotId={spot.id} />}
+          className="manage-button"
+        />
       </div>
     </div>
   );
