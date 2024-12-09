@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import * as sessionActions from "../../store/session";
 import "./ProfileButton.css"; // Ensure this path is correct
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
 
@@ -46,6 +48,7 @@ function ProfileButton({ user }) {
           {user.firstName} {user.lastName}
         </li>
         <li>{user.email}</li>
+        <li onClick={() => navigate("/spots/current")}>Manage Spots</li>
         <li>
           <button onClick={logout}>Log Out</button>
         </li>

@@ -24,13 +24,13 @@ function SpotCard({ spot }) {
       title={`${spot.name}`}
       onClick={() => onClick(spot.id)}
     >
-      <img className="spot-card-img" src={`${imageUrl}`} alt="preview" />
+      <img className="spot-card-img" src={`/${imageUrl}`} alt="preview" />
       <div className="detail-box">
         <p className="location">
           {spot.city}, {spot.state}
         </p>
         <div className="rating-box">
-          <img className="star" src="star.png" alt="star" />
+          <img className="star" src="/star.png" alt="star" />
           <p className="rating">{spot.avgRating ? spot.avgRating : "New"}</p>
         </div>
       </div>

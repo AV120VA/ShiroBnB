@@ -1,0 +1,34 @@
+.manage-spots-container {
+  width: 100%;
+  padding-top: 30px;
+  padding-left: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.manage-card-box {
+  width: 88%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.manage-not-logged-in {
+  width: 100%;
+  padding-top: 30px;
+  padding-left: 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+.manage-create-button {
+  background: #23395d;
+  height: 30px;
+  width: 120px;
+  color: white;
+  border: none;
+  font-size: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}

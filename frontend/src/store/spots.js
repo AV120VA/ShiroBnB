@@ -1,12 +1,4 @@
-// USE LATER
-// import { csrfFetch } from "./csrf";
 import { createSelector } from "reselect";
-
-// headers shortcut
-
-// const headers = {
-//   "Content-type": "application/json",
-// };
 
 // Action Types
 
@@ -49,6 +41,7 @@ export const getSpotById = (spotId) => async (dispatch) => {
   dispatch(loadSpotById(spot));
   return spot;
 };
+
 // Reducers
 
 const initialState = {};
@@ -76,6 +69,10 @@ export const selectSpots = (state) => state.spots;
 
 export const selectAllSpots = createSelector([selectSpots], (spots) => {
   return spots ? Object.values(spots) : [];
+});
+
+export const selectUserSpots = createSelector([selectSpots], (spots) => {
+  return spots && spots.userSpots ? Object.values(spots.userSpots) : [];
 });
 
 export default spotsReducer;

@@ -1,0 +1,43 @@
+.manage-card-container {
+  z-index: 0;
+  width: 29%;
+}
+
+.manage-card-img {
+  height: 300px;
+  border-radius: 10px;
+}
+.star {
+  background-color: white;
+  mix-blend-mode: multiply;
+  height: 30px;
+}
+
+.manage-detail-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.manage-rating-box {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.manage-buttons-container {
+  width: 33%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.manage-button {
+  background: #23395d;
+  color: white;
+  border: none;
+  font-size: 15px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
