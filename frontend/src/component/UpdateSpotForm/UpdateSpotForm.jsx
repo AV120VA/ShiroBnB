@@ -1,34 +1,32 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getSpotById } from "../../store/spots";
+import { useDispatch } from "react-redux";
+import { getSpotById, updateSpot } from "../../store/spots";
 import "./UpdateSpotForm.css";
 
 function UpdateSpotForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { spotId } = useParams();
-  const spot = useSelector((state) => state.spots.spotById);
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState(null);
 
   useEffect(() => {
-    dispatch(getSpotById(spotId))
-      .then(() => setIsLoaded(true))
-      .then(() =>
-        setFormData({
-          address: spot.address || "",
-          city: spot.city || "",
-          state: spot.state || "",
-          country: spot.country || "",
-          name: spot.name,
-          description: spot.description || "",
-          price: spot.price || "",
-        })
-      );
-  }, [dispatch, spotId, spot]);
+    dispatch(getSpotById(spotId)).then((fetchedSpot) => {
+      setFormData({
+        address: fetchedSpot.address || "",
+        city: fetchedSpot.city || "",
+        state: fetchedSpot.state || "",
+        country: fetchedSpot.country || "",
+        name: fetchedSpot.name || "",
+        description: fetchedSpot.description || "",
+        price: fetchedSpot.price || "",
+      });
+      setIsLoaded(true);
+    });
+  }, [dispatch, spotId]);
 
   const handleChange = (event) => {
     setFormData({
@@ -52,16 +50,17 @@ function UpdateSpotForm() {
 
     setErrors(validationErrors);
 
-    return Object.keys(validationErrors).length > 0;
+    return Object.keys(validationErrors).length === 0;
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (validateForm()) {
-      window.scrollTo(0, 0);
-      return;
+      dispatch(updateSpot(spotId, formData));
+      setFormData(null);
+      navigate(`/spots/${spotId}`);
     } else {
-      navigate(`/spots/${spot.id}`);
+      window.scrollTo(0, 0);
     }
   };
   return (

@@ -1,9 +1,15 @@
 import { createSelector } from "reselect";
+import { csrfFetch } from "./csrf";
+
+const headers = {
+  "Content-Type": "application/json",
+};
 
 // Action Types
 
 const LOAD_SPOTS = "spots/loadSpots";
 const LOAD_SPOT_BY_ID = "spots/loadSpotById";
+const UPDATE_SPOT = "spots/updateSpot";
 
 // Action Creators
 
@@ -42,7 +48,25 @@ export const getSpotById = (spotId) => async (dispatch) => {
   return spot;
 };
 
-// Reducers
+export const updateSpot = (spotId, spotData) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(spotData),
+    });
+    const updatedSpot = await response.json();
+    dispatch({
+      type: "UPDATE_SPOT",
+      payload: updatedSpot,
+    });
+    return updatedSpot;
+  } catch (e) {
+    return e;
+  }
+};
+
+// Reducer
 
 const initialState = {};
 
@@ -57,6 +81,21 @@ function spotsReducer(state = initialState, action) {
     }
     case LOAD_SPOT_BY_ID: {
       return { ...state, spotById: action.spots };
+    }
+    case UPDATE_SPOT: {
+      const updatedSpot = action.payload;
+      const currentSpot = state[updatedSpot.id] || {};
+      updatedSpot.numReviews = updatedSpot.reviews.length;
+      updatedSpot.avgStarRating =
+        updatedSpot.reviews.reduce((acc, review) => acc + review.stars, 0) /
+        updatedSpot.reviews.length;
+      return {
+        ...state,
+        [updatedSpot.id]: {
+          ...currentSpot,
+          ...updatedSpot,
+        },
+      };
     }
     default:
       return state;
