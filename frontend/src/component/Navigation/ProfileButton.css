@@ -12,6 +12,10 @@
   margin: 0;
 }
 
+.manage-spots {
+  color: #23395d;
+}
+
 .profile-button {
   position: relative;
   margin-right: 10px;
