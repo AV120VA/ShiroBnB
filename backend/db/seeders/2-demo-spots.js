@@ -21,7 +21,7 @@ module.exports = {
         lng: 179.99,
         name: "Himeji Castle",
         description:
-          "Himeji Castle, a UNESCO World Heritage Site, is Japans most beautiful and well-preserved castle. Known for its white facade and stunning architecture, it offers a glimpse into samurai history. Visitors can explore the castles grounds, gardens, and enjoy panoramic views, making it a perfect cultural experience.",
+          "A UNESCO World Heritage Site, Himeji Castle is known for its stunning white facade and rich samurai history. Explore the grounds, gardens, and enjoy panoramic views, a perfect cultural experience.",
         price: 120,
         previewImage: "https://i.imgur.com/7jSRUAV.jpeg",
       },
@@ -35,7 +35,7 @@ module.exports = {
         lng: 159.99,
         name: "Okayama Castle",
         description:
-          "Okayama Castle, known as Crow Castle for its dark exterior, offers stunning views and a deep dive into Japans samurai history. Located near Korakuen Garden, it blends cultural exploration with nature. Explore the castles exhibits and relax in the peaceful garden for a unique, enriching experience.",
+          "Known as Crow Castle for its dark exterior, Okayama Castle offers rich samurai history and breathtaking views. Located near Korakuen Garden, enjoy a peaceful mix of culture and nature.",
         price: 150,
         previewImage: "https://i.imgur.com/y18GfHI.jpeg",
       },
@@ -49,7 +49,7 @@ module.exports = {
         lng: 149.99,
         name: "Osaka Castle",
         description:
-          "Located in the heart of Osaka, Osaka Castle is a symbol of Japans history and architecture. Surrounded by a landscaped park, it offers a peaceful escape with panoramic city views. Explore the castle, its museum, and nearby cherry blossoms. Enjoy the perfect blend of history and modern amenities.",
+          "Osaka Castle, located in the heart of the city, is a symbol of Japans history and architecture. Surrounded by a park, explore the castle, museum, and enjoy panoramic city views.",
         price: 120,
         previewImage: "https://i.imgur.com/h2kzWf4.jpeg",
       },
