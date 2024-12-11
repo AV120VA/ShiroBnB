@@ -15,8 +15,10 @@ function SpotCard({ spot }) {
   if (spot.previewImage) {
     imageUrl = spot.previewImage;
   } else if (spot.SpotImages.length > 0) {
-    imageUrl = spot.SpotImages[0];
+    imageUrl = spot.SpotImages[0].url;
   }
+
+  console.log("IMAGE URL", imageUrl);
 
   return (
     <div
@@ -24,7 +26,7 @@ function SpotCard({ spot }) {
       title={`${spot.name}`}
       onClick={() => onClick(spot.id)}
     >
-      <img className="spot-card-img" src={`/${imageUrl}`} alt="preview" />
+      <img className="spot-card-img" src={`${imageUrl}`} alt="preview" />
       <div className="detail-box">
         <p className="location">
           {spot.city}, {spot.state}

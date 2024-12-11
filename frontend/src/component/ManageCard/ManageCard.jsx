@@ -8,7 +8,7 @@ function ManageCard({ spot }) {
   let imageUrl = spot.previewImage;
   return (
     <div className="manage-card-container" title={`${spot.name}`}>
-      <img className="manage-card-img" src={`/${imageUrl}`} alt="preview" />
+      <img className="manage-card-img" src={`${imageUrl}`} alt="preview" />
       <div className="manage-detail-box">
         <p className="location">
           {spot.city}, {spot.state}
