@@ -1,10 +1,11 @@
 .manage-card-container {
   z-index: 0;
   width: 29%;
+  cursor: pointer;
 }
 
 .manage-card-img {
-  height: 300px;
+  height: 292px;
   border-radius: 10px;
 }
 .star {

@@ -1,3 +1,139 @@
+.spot-details-page {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  padding-left: 120px;
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+
+.location-details {
+  width: 95%;
+}
+
+.picture-box {
+  width: 95%;
+  height: 600px;
+  display: flex;
+  gap: 10px;
+}
+
+.big-image {
+  width: 57%;
+  height: 600px;
+}
+
+.small-images {
+  height: 100%;
+  width: 45%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.small-image {
+  height: 49%;
+}
+
+.description-reserve {
+  width: 95%;
+  display: flex;
+  height: fit-content;
+  gap: 3%;
+}
+
+.description {
+  width: 67%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.reserve-card {
+  border: 1px solid black;
+  background-color: #23395d;
+  border-radius: 10px;
+  padding: 12px;
+  padding-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  height: 120px;
+}
+
+.reserve-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.price-box {
+  display: flex;
+  align-items: center;
+}
+
+.spot-reviews-box {
+  width: fit-content;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
 .details-star {
-  height: 30px;
+  height: 40px;
+  padding-bottom: 5px;
+}
+
+.review-count {
+  font-size: 20px;
+}
+
+.host {
+  font-size: 22px;
+}
+
+.description-text {
+  font-size: 18px;
+}
+
+.white-text {
+  color: white;
+}
+
+.card-price {
+  font-size: 25px;
+}
+
+.reserve-button-box {
+  width: 100%;
+  height: 25%;
+  display: flex;
+  justify-content: center;
+}
+
+.reserve-button {
+  border: none;
+  background-color: white;
+  border-radius: 10px;
+  width: 35%;
+  height: 100%;
+  color: #23395d;
+  font-size: 18px;
+}
+
+.image-radius {
+  border-radius: 10px;
+}
+
+.spacer-box {
+  display: flex;
+  align-items: center;
 }

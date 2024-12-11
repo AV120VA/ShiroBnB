@@ -18,7 +18,22 @@ module.exports = {
       },
       {
         spotId: 1,
-        url: "image.png",
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 1,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 1,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 1,
+        url: "https://via.placeholder.com/150",
         preview: "false",
       },
       {
@@ -28,7 +43,22 @@ module.exports = {
       },
       {
         spotId: 2,
-        url: "image.png",
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 2,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 2,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 2,
+        url: "https://via.placeholder.com/150",
         preview: "false",
       },
       {
@@ -38,7 +68,22 @@ module.exports = {
       },
       {
         spotId: 3,
-        url: "image.png",
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 3,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 3,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 3,
+        url: "https://via.placeholder.com/150",
         preview: "false",
       },
     ]);

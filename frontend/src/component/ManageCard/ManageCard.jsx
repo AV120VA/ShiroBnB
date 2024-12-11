@@ -7,7 +7,11 @@ function ManageCard({ spot }) {
   const navigate = useNavigate();
   let imageUrl = spot.previewImage;
   return (
-    <div className="manage-card-container" title={`${spot.name}`}>
+    <div
+      className="manage-card-container"
+      onClick={() => navigate(`/spots/${spot.id}`)}
+      title={`${spot.name}`}
+    >
       <img className="manage-card-img" src={`${imageUrl}`} alt="preview" />
       <div className="manage-detail-box">
         <p className="location">
