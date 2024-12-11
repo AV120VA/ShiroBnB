@@ -5,6 +5,9 @@ import "./CreateSpotForm.css";
 function CreateSpotForm() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [previewUrl, setPreviewURL] = useState("");
+  const [imageUrls, setImageUrls] = useState(["", "", "", ""]);
+
   const [formData, setFormData] = useState({
     address: "",
     city: "",
@@ -22,6 +25,18 @@ function CreateSpotForm() {
     });
   };
 
+  const handleUrlChange = (event, index) => {
+    const { value } = event.target;
+
+    if (index === undefined) {
+      setPreviewURL(value);
+    } else {
+      const updatedImageUrls = [...imageUrls];
+      updatedImageUrls[index] = value;
+      setImageUrls(updatedImageUrls);
+    }
+  };
+
   const validateForm = () => {
     const validationErrors = {};
 
@@ -34,6 +49,22 @@ function CreateSpotForm() {
       validationErrors.description =
         "Description need a minimum of 30 characters";
     if (!formData.price) validationErrors.price = "Price is required";
+
+    const urlRegex = /\.(png|jpg|jpeg)$/i;
+    if (!previewUrl) {
+      validationErrors.previewUrlRequired = "Preview image URL is required";
+    }
+    if (previewUrl && !urlRegex.test(previewUrl)) {
+      validationErrors.previewUrlInvalid =
+        "Image URL needs to end in png or jpg (or jpeg)";
+    }
+
+    imageUrls.forEach((url, index) => {
+      if (url && !urlRegex.test(url)) {
+        validationErrors[`imageUrl${index}`] =
+          "Image URL needs to end in png or jpg (or jpeg)";
+      }
+    });
 
     setErrors(validationErrors);
 
@@ -179,6 +210,7 @@ function CreateSpotForm() {
               <p className="money-sign">$</p>
               <input
                 type="number"
+                className="price-set"
                 name="price"
                 value={formData.price}
                 placeholder="Price per night (USD)"
@@ -192,7 +224,37 @@ function CreateSpotForm() {
             <p className="section-text">
               Submit a link to at least one photo to publish your spot
             </p>
-            <p>ASK ABOUT DATABASE MODIFICATIONS</p>
+            <div className="photo-inputs">
+              {errors.previewUrlRequired && (
+                <p className="error-text">{errors.previewUrlRequired}</p>
+              )}
+              <input
+                type="text"
+                className="photo-input"
+                value={previewUrl}
+                placeholder="Preview Image Url"
+                onChange={(event) => handleUrlChange(event, undefined)}
+              />
+              {errors.previewUrlInvalid && (
+                <p className="error-text">{errors.previewUrlInvalid}</p>
+              )}
+
+              {imageUrls.map((url, index) => (
+                <div key={index}>
+                  <input
+                    key={index}
+                    type="text"
+                    className="photo-input"
+                    value={url}
+                    placeholder="Image URL"
+                    onChange={(event) => handleUrlChange(event, index)}
+                  />
+                  {errors[`imageUrl${index}`] && (
+                    <p className="error-text">{errors[`imageUrl${index}`]}</p>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
           <div className="submit-box">
             <button className="submit-button" type="submit">
