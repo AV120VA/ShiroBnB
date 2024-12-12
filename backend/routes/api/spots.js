@@ -81,11 +81,11 @@ const validateCreation = [
     .notEmpty()
     .withMessage("Country is required"),
   check("lat")
-    .exists({ checkFalsy: true })
+    .optional()
     .isFloat({ min: -90, max: 90 })
     .withMessage("Latitude must be within -90 and 90"),
   check("lng")
-    .exists({ checkFalsy: true })
+    .optional()
     .isFloat({ min: -180, max: 180 })
     .withMessage("Longitude must be within -180 and 180"),
   check("name")
@@ -338,8 +338,8 @@ router.post("/", requireAuth, validateCreation, async (req, res) => {
     city,
     state,
     country,
-    lat: formattedLat,
-    lng: formattedLng,
+    lat: formattedLat ? formattedLat : 0.0,
+    lng: formattedLng ? formattedLng : 0.0,
     name,
     description,
     price: formattedPrice,
@@ -529,7 +529,6 @@ router.get("/:spotId/reviews", async (req, res) => {
       createdAt: formatDate(review.createdAt),
       updatedAt: formatDate(review.updatedAt),
       User: {
-
         id: review.User.id,
         firstName: review.User.firstName,
         lastName: review.User.lastName,
@@ -670,7 +669,6 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
   let currentDate = new Date();
   let formattedStartDate = new Date(req.body.startDate);
   let formattedEndDate = new Date(req.body.endDate);
-
 
   if (formattedStartDate < currentDate) {
     return res.status(400).json({

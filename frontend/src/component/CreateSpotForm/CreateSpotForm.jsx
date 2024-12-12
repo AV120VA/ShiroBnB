@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addSpot, addSpotImage } from "../../store/spots";
 import "./CreateSpotForm.css";
 
 function CreateSpotForm() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
   const [previewUrl, setPreviewURL] = useState("");
   const [imageUrls, setImageUrls] = useState(["", "", "", ""]);
@@ -71,14 +74,36 @@ function CreateSpotForm() {
     return Object.keys(validationErrors).length > 0;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateForm()) {
       window.scrollTo(0, 0);
       return;
-    } else {
-      navigate("/");
     }
+
+    const newSpot = await dispatch(addSpot(formData));
+    if (!newSpot.id) {
+      if (newSpot.payload && newSpot.payload.errors) {
+        setErrors(newSpot.payload.errors);
+      }
+      return;
+    }
+
+    if (previewUrl) {
+      await dispatch(
+        addSpotImage(newSpot.id, { url: previewUrl, preview: true })
+      );
+    }
+
+    const imagePromises = imageUrls
+      .filter((url) => url !== "")
+      .map((url) => {
+        return dispatch(addSpotImage(newSpot.id, { url, preview: false }));
+      });
+
+    await Promise.all(imagePromises);
+
+    navigate(`/spots/${newSpot.id}`);
   };
   return (
     <div className="create-spot-container">
