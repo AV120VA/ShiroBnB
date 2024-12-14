@@ -96,7 +96,7 @@ function SpotDetail() {
             </div>
           </div>
           <div className="reviews-containter"></div>
-          <ReviewCallout spotId={spotId} />
+          <ReviewCallout spot={spot} />
         </div>
       )}
     </>
