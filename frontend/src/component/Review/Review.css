@@ -1,0 +1,15 @@
+.review-text {
+  font-size: 18px;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.delete-review-button {
+  background-color: #23395d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 12px;
+}
