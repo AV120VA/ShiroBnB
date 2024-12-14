@@ -18,8 +18,8 @@ function ReviewCallout({ spot }) {
   }, [dispatch, spot.id, refreshToggle]);
 
   useEffect(() => {
-    if (isLoaded && reviews.length > 0) {
-      const reviewed = reviews.some(
+    if (isLoaded && Object.values(reviews).length > 0) {
+      const reviewed = Object.values(reviews).some(
         (review) => review.User.id === sessionUser.id
       );
       setAlreadyReviewed(reviewed);
@@ -71,7 +71,7 @@ function ReviewCallout({ spot }) {
           </div>
           {spot.ownerId !== sessionUser.id &&
           sessionUser &&
-          alreadyReviewed === true ? (
+          alreadyReviewed === false ? (
             <>
               <button className="post-review-button">Post Your Review</button>
               {Object.values(reviews).length === 0 ? (
