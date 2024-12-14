@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSpotById } from "../../store/spots";
+import ReviewCallout from "../ReviewCallout/ReviewCallout";
 import "./SpotDetails.css";
 
 function SpotDetail() {
@@ -94,6 +95,8 @@ function SpotDetail() {
               </div>
             </div>
           </div>
+          <div className="reviews-containter"></div>
+          <ReviewCallout spotId={spotId} />
         </div>
       )}
     </>
