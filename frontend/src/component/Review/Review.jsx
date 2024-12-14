@@ -24,13 +24,8 @@ function Review({ reviews, onDelete }) {
     <>
       {sortedReviews.length > 0
         ? sortedReviews.map((review) => {
-            console.log("REVIEW: ", review.createdAt);
-
             const fixedDateString = fixDateString(review.createdAt);
             const createdAt = new Date(fixedDateString);
-
-            console.log("CREATED AT: ", createdAt);
-
             const formattedDate = createdAt.toLocaleString("default", {
               month: "long",
               year: "numeric",
@@ -45,15 +40,18 @@ function Review({ reviews, onDelete }) {
                 <p className="review-text review-description-text">
                   {review.review}
                 </p>
-                {review.User.id === sessionUser.id ? (
+                {sessionUser && review.User.id === sessionUser.id && (
                   <OpenModalButton
                     buttonText="Delete"
                     modalComponent={
-                      <DeleteReviewModal reviewId={review.id} onDelete={onDelete} />
+                      <DeleteReviewModal
+                        reviewId={review.id}
+                        onDelete={onDelete}
+                      />
                     }
                     className="manage-button"
                   />
-                ) : null}
+                )}
               </div>
             );
           })

@@ -8,9 +8,8 @@ function ReviewCallout({ spot }) {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const [isLoaded, setIsLoaded] = useState(false);
-  const reviews = useSelector((state) => state.reviews.spotReviews);
+  const reviews = useSelector((state) => state.reviews.spotReviews) || {};
   const [alreadyReviewed, setAlreadyReviewed] = useState(false);
-
   const [refreshToggle, setRefreshToggle] = useState(false);
 
   useEffect(() => {
@@ -18,13 +17,15 @@ function ReviewCallout({ spot }) {
   }, [dispatch, spot.id, refreshToggle]);
 
   useEffect(() => {
-    if (isLoaded && Object.values(reviews).length > 0) {
+    if (isLoaded && sessionUser && Object.values(reviews).length > 0) {
       const reviewed = Object.values(reviews).some(
-        (review) => review.User.id === sessionUser.id
+        (review) => review?.User?.id === sessionUser.id
       );
       setAlreadyReviewed(reviewed);
+    } else {
+      setAlreadyReviewed(false);
     }
-  }, [isLoaded, reviews, sessionUser.id]);
+  }, [isLoaded, reviews, sessionUser]);
 
   const triggerRefresh = () => {
     setRefreshToggle((prev) => !prev);
@@ -38,26 +39,20 @@ function ReviewCallout({ spot }) {
             <div className="star-and-rating">
               <img className="review-section-star" src="/star.png" alt="star" />
               {Object.values(reviews).length > 0 ? (
-                <>
-                  {" "}
-                  <p className="review-callout-text">
-                    {spot.avgStarRating.toFixed(1)}
-                  </p>
-                </>
+                <p className="review-callout-text">
+                  {spot.avgStarRating?.toFixed(1) || "0.0"}
+                </p>
               ) : (
                 <p className="review-callout-text">0.0</p>
               )}
             </div>
-            {Object.values(reviews).length > 0 ? (
+            {Object.values(reviews).length > 0 && (
               <p className="review-callout-text">•</p>
-            ) : null}
+            )}
             <div className="review-count">
               {Object.values(reviews).length > 0 ? (
                 <>
-                  {" "}
-                  <p className="review-callout-text">
-                    # {spot.numReviews}
-                  </p>{" "}
+                  <p className="review-callout-text"># {spot.numReviews}</p>
                   {Object.values(reviews).length === 1 ? (
                     <p className="review-callout-text">Review</p>
                   ) : (
@@ -69,16 +64,18 @@ function ReviewCallout({ spot }) {
               )}
             </div>
           </div>
-          {spot.ownerId !== sessionUser.id &&
-          sessionUser &&
-          alreadyReviewed === false ? (
-            <>
-              <button className="post-review-button">Post Your Review</button>
-              {Object.values(reviews).length === 0 ? (
-                <p className="first-to-post">Be the first to post a review!</p>
-              ) : null}
-            </>
-          ) : null}
+          {spot.ownerId !== sessionUser?.id &&
+            sessionUser &&
+            !alreadyReviewed && (
+              <>
+                <button className="post-review-button">Post Your Review</button>
+                {Object.values(reviews).length === 0 && (
+                  <p className="first-to-post">
+                    Be the first to post a review!
+                  </p>
+                )}
+              </>
+            )}
           <Review reviews={reviews} onDelete={triggerRefresh} />
         </div>
       )}
