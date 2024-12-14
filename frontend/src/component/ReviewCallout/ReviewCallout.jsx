@@ -13,7 +13,7 @@ function ReviewCallout({ spot }) {
 
   useEffect(() => {
     dispatch(getReviewsById(spot.id)).then(() => setIsLoaded(true));
-  }, [dispatch, spot.id]);
+  }, [dispatch, spot.id, alreadyReviewed]);
 
   useEffect(() => {
     if (isLoaded && reviews.length > 0) {

@@ -1,13 +1,25 @@
-//import { csrfFetch } from "./csrf";
+import { csrfFetch } from "./csrf";
+
+const headers = {
+  "Content-Type": "application/json",
+};
 
 // Action Types
 const LOAD_REVIEWS_BY_ID = "reviews/loadReviewsById";
+const REMOVE_REVIEW = "reviews/deleteReview";
 
 // Action Creators
 const loadReviewsById = (reviews) => {
   return {
     type: LOAD_REVIEWS_BY_ID,
     reviews,
+  };
+};
+
+const removeReview = (reviewId) => {
+  return {
+    type: REMOVE_REVIEW,
+    reviewId,
   };
 };
 
@@ -21,6 +33,25 @@ export const getReviewsById = (spotId) => async (dispatch) => {
     const error = await response.json();
     console.error("Failed to fetch reviews: ", error);
     throw error;
+  }
+};
+
+export const deleteReview = (reviewId) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+      method: "DELETE",
+      headers,
+    });
+    if (response.ok) {
+      dispatch(removeReview(reviewId));
+      return response;
+    } else {
+      const error = await response.json();
+      throw new Error(error.message);
+    }
+  } catch (e) {
+    console.log("Unable to delete spot:", e);
+    return e;
   }
 };
 
@@ -38,6 +69,11 @@ function reviewsReducer(state = initialState, action) {
         ...state,
         spotReviews: newReviews,
       };
+    }
+    case REMOVE_REVIEW: {
+      const newState = { ...state };
+      delete newState.spotReviews[action.reviewId];
+      return newState;
     }
     default:
       return state;
