@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getReviewsById } from "../../store/reviews";
 import { useEffect, useState } from "react";
+import CreateReviewModal from "../CreateReviewModal/CreateReviewModal";
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import Review from "../Review/Review";
 import "./ReviewCallout.css";
 
@@ -68,7 +70,11 @@ function ReviewCallout({ spot }) {
             sessionUser &&
             !alreadyReviewed && (
               <>
-                <button className="post-review-button">Post Your Review</button>
+                <OpenModalButton
+                  className="post-review-button"
+                  buttonText="Post Your Review"
+                  modalComponent={<CreateReviewModal />}
+                />
                 {Object.values(reviews).length === 0 && (
                   <p className="first-to-post">
                     Be the first to post a review!
