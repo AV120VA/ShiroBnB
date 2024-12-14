@@ -3,7 +3,7 @@ import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import "./Review.css";
 import DeleteReviewModal from "../DeleteReviewModal/DeleteReviewModal";
 
-function Review({ reviews }) {
+function Review({ reviews, onDelete }) {
   const sessionUser = useSelector((state) => state.session.user);
 
   const sortedReviews = Object.values(reviews).sort((a, b) => b.id - a.id);
@@ -48,7 +48,9 @@ function Review({ reviews }) {
                 {review.User.id === sessionUser.id ? (
                   <OpenModalButton
                     buttonText="Delete"
-                    modalComponent={<DeleteReviewModal reviewId={review.id} />}
+                    modalComponent={
+                      <DeleteReviewModal reviewId={review.id} onDelete={onDelete} />
+                    }
                     className="manage-button"
                   />
                 ) : null}

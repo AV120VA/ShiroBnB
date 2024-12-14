@@ -11,9 +11,11 @@ function ReviewCallout({ spot }) {
   const reviews = useSelector((state) => state.reviews.spotReviews);
   const [alreadyReviewed, setAlreadyReviewed] = useState(false);
 
+  const [refreshToggle, setRefreshToggle] = useState(false);
+
   useEffect(() => {
     dispatch(getReviewsById(spot.id)).then(() => setIsLoaded(true));
-  }, [dispatch, spot.id, alreadyReviewed]);
+  }, [dispatch, spot.id, refreshToggle]);
 
   useEffect(() => {
     if (isLoaded && reviews.length > 0) {
@@ -23,6 +25,10 @@ function ReviewCallout({ spot }) {
       setAlreadyReviewed(reviewed);
     }
   }, [isLoaded, reviews, sessionUser.id]);
+
+  const triggerRefresh = () => {
+    setRefreshToggle((prev) => !prev);
+  };
 
   return (
     <>
@@ -73,7 +79,7 @@ function ReviewCallout({ spot }) {
               ) : null}
             </>
           ) : null}
-          <Review reviews={reviews} />
+          <Review reviews={reviews} onDelete={triggerRefresh} />
         </div>
       )}
     </>

@@ -3,13 +3,14 @@ import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./DeleteReviewModal.css";
 
-function DeleteReviewModal({ reviewId }) {
+function DeleteReviewModal({ reviewId, onDelete }) {
   const dispatch = useDispatch();
   const { setModalContent } = useModal();
 
   const dispatchDelete = async () => {
     await dispatch(deleteReview(reviewId));
     setModalContent(null);
+    if (onDelete) onDelete();
   };
 
   return (
