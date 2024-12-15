@@ -10,9 +10,8 @@ function ReviewCallout({ spot }) {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [refreshToggle, setRefreshToggle] = useState(false); // Add a state to trigger re-fetch
+  const [refreshToggle, setRefreshToggle] = useState(false);
 
-  // Memoize reviews initialization to avoid changing dependencies on every render
   const reviews = useSelector((state) => state.reviews.spotReviews);
   const reviewsArray = useMemo(() => {
     return reviews ? Object.values(reviews) : [];
@@ -20,10 +19,9 @@ function ReviewCallout({ spot }) {
 
   const [alreadyReviewed, setAlreadyReviewed] = useState(false);
 
-  // Fetch reviews when component mounts or refreshToggle changes
   useEffect(() => {
     dispatch(getReviewsById(spot.id)).then(() => setIsLoaded(true));
-  }, [dispatch, spot.id, refreshToggle]); // Refresh when refreshToggle changes
+  }, [dispatch, spot.id, refreshToggle]);
 
   useEffect(() => {
     if (isLoaded && sessionUser && reviewsArray.length > 0) {
@@ -36,9 +34,8 @@ function ReviewCallout({ spot }) {
     }
   }, [isLoaded, reviewsArray, sessionUser]);
 
-  // Trigger the refresh of reviews by changing the refreshToggle state
   const handleDelete = () => {
-    setRefreshToggle((prev) => !prev); // Toggle to trigger re-fetch of reviews
+    setRefreshToggle((prev) => !prev);
   };
 
   return (
@@ -91,7 +88,6 @@ function ReviewCallout({ spot }) {
               </>
             )}
           <Review reviews={reviews} onDelete={handleDelete} />{" "}
-          {/* Pass onDelete here */}
         </div>
       )}
     </>

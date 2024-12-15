@@ -10,14 +10,13 @@ function DeleteReviewModal({ reviewId, onDelete }) {
   const dispatchDelete = async () => {
     console.log("Attempting to delete review with ID:", reviewId);
     try {
-      // Dispatch delete review action
       await dispatch(deleteReview(reviewId));
       console.log("Review deleted successfully");
-      setModalContent(null); // Close modal after successful deletion
+      setModalContent(null);
 
       if (onDelete) {
         console.log("Calling onDelete to refresh reviews");
-        onDelete(); // Call onDelete to refresh the parent component's reviews
+        onDelete();
       }
     } catch (error) {
       console.error("Error deleting review:", error);
