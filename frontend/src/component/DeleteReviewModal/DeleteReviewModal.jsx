@@ -1,23 +1,24 @@
 import { deleteReview } from "../../store/reviews";
+import { getSpotById } from "../../store/spots";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./DeleteReviewModal.css";
 
-function DeleteReviewModal({ reviewId, onDelete }) {
+function DeleteReviewModal({ reviewId, onDelete, spotId }) {
   const dispatch = useDispatch();
   const { setModalContent } = useModal();
 
   const dispatchDelete = async () => {
-    console.log("Attempting to delete review with ID:", reviewId);
     try {
       await dispatch(deleteReview(reviewId));
-      console.log("Review deleted successfully");
+
       setModalContent(null);
 
       if (onDelete) {
-        console.log("Calling onDelete to refresh reviews");
         onDelete();
       }
+
+      await dispatch(getSpotById(spotId));
     } catch (error) {
       console.error("Error deleting review:", error);
     }

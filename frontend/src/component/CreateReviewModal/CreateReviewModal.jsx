@@ -1,7 +1,9 @@
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { useModal } from "../../context/Modal";
-import { addReviewThunk, getReviewsById } from "../../store/reviews";
+import { addReviewThunk } from "../../store/reviews";
+import { getReviewsById } from "../../store/reviews";
+import { getSpotById } from "../../store/spots";
 import "./CreateReviewModal.css";
 
 function CreateReviewModal({ spotId }) {
@@ -26,14 +28,20 @@ function CreateReviewModal({ spotId }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await dispatch(
-      addReviewThunk(spotId, {
-        review,
-        stars: userRating,
-      })
-    );
-    dispatch(getReviewsById(spotId));
-    setModalContent(null);
+    try {
+      await dispatch(
+        addReviewThunk(spotId, {
+          review,
+          stars: userRating,
+        })
+      );
+
+      await dispatch(getSpotById(spotId));
+      await dispatch(getReviewsById(spotId));
+      setModalContent(null);
+    } catch (error) {
+      console.error("Error adding review:", error);
+    }
   };
 
   return (

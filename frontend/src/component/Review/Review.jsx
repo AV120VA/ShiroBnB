@@ -31,22 +31,26 @@ function Review({ reviews, onDelete }) {
               year: "numeric",
             });
 
+            const userFirstName = review.User
+              ? review.User.firstName
+              : "Unknown User";
+            const userId = review.User ? review.User.id : null;
+
             return (
               <div key={review.id} className="review-text">
-                <h3 className="review-user-first-name">
-                  {review.User.firstName}
-                </h3>
+                <h3 className="review-user-first-name">{userFirstName}</h3>
                 <p className="review-text bold review-date">{formattedDate}</p>
                 <p className="review-text review-description-text">
                   {review.review}
                 </p>
-                {sessionUser && review.User.id === sessionUser.id && (
+                {sessionUser && userId && review.User.id === sessionUser.id && (
                   <OpenModalButton
                     buttonText="Delete"
                     modalComponent={
                       <DeleteReviewModal
                         reviewId={review.id}
                         onDelete={onDelete}
+                        spotId={review.spotId}
                       />
                     }
                     className="manage-button"
