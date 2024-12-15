@@ -18,8 +18,6 @@ function SpotCard({ spot }) {
     imageUrl = spot.SpotImages[0].url;
   }
 
-  console.log("IMAGE URL", imageUrl);
-
   return (
     <div
       className="spot-card-container"

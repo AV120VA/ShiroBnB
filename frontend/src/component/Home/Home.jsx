@@ -7,7 +7,7 @@ import "./Home.css";
 function Home() {
   const dispatch = useDispatch();
   const spots = useSelector(selectAllSpots);
-  console.log("SPOTS!!!!!!", spots);
+
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
