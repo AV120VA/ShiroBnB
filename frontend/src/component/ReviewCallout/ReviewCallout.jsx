@@ -54,7 +54,9 @@ function ReviewCallout({ spot }) {
             <div className="review-count">
               {Object.values(reviews).length > 0 ? (
                 <>
-                  <p className="review-callout-text"># {spot.numReviews}</p>
+                  <p className="review-callout-text">
+                    # {Object.values(reviews).length}
+                  </p>
                   {Object.values(reviews).length === 1 ? (
                     <p className="review-callout-text">Review</p>
                   ) : (
@@ -73,7 +75,7 @@ function ReviewCallout({ spot }) {
                 <OpenModalButton
                   className="post-review-button"
                   buttonText="Post Your Review"
-                  modalComponent={<CreateReviewModal />}
+                  modalComponent={<CreateReviewModal spotId={spot.id} />}
                 />
                 {Object.values(reviews).length === 0 && (
                   <p className="first-to-post">

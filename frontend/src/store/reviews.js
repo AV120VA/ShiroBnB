@@ -7,6 +7,7 @@ const headers = {
 // Action Types
 const LOAD_REVIEWS_BY_ID = "reviews/loadReviewsById";
 const REMOVE_REVIEW = "reviews/deleteReview";
+const ADD_REVIEW = "reviews/addReview";
 
 // Action Creators
 const loadReviewsById = (reviews) => {
@@ -20,6 +21,13 @@ const removeReview = (reviewId) => {
   return {
     type: REMOVE_REVIEW,
     reviewId,
+  };
+};
+
+const addReview = (review) => {
+  return {
+    type: ADD_REVIEW,
+    review,
   };
 };
 
@@ -50,7 +58,29 @@ export const deleteReview = (reviewId) => async (dispatch) => {
       throw new Error(error.message);
     }
   } catch (e) {
-    console.log("Unable to delete spot:", e);
+    console.log("Unable to delete review:", e);
+    return e;
+  }
+};
+
+export const addReviewThunk = (spotId, reviewData) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(reviewData),
+    });
+
+    if (response.ok) {
+      const newReview = await response.json();
+      dispatch(addReview(newReview));
+      return newReview;
+    } else {
+      const error = await response.json();
+      throw new Error(error.message);
+    }
+  } catch (e) {
+    console.log("Error adding review:", e);
     return e;
   }
 };
@@ -73,6 +103,11 @@ function reviewsReducer(state = initialState, action) {
     case REMOVE_REVIEW: {
       const newState = { ...state };
       delete newState.spotReviews[action.reviewId];
+      return newState;
+    }
+    case ADD_REVIEW: {
+      const newState = { ...state };
+      newState.spotReviews[action.review.id] = action.review;
       return newState;
     }
     default:
