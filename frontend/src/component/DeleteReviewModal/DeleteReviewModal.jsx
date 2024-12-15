@@ -8,15 +8,26 @@ function DeleteReviewModal({ reviewId, onDelete }) {
   const { setModalContent } = useModal();
 
   const dispatchDelete = async () => {
-    await dispatch(deleteReview(reviewId));
-    setModalContent(null);
-    if (onDelete) onDelete();
+    console.log("Attempting to delete review with ID:", reviewId);
+    try {
+      // Dispatch delete review action
+      await dispatch(deleteReview(reviewId));
+      console.log("Review deleted successfully");
+      setModalContent(null); // Close modal after successful deletion
+
+      if (onDelete) {
+        console.log("Calling onDelete to refresh reviews");
+        onDelete(); // Call onDelete to refresh the parent component's reviews
+      }
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    }
   };
 
   return (
     <div className="delete-modal-container">
       <div className="review-delete-text">
-        <h1>Confirm Delete</h1>{" "}
+        <h1>Confirm Delete</h1>
         <p>Are you sure you want to remove this review?</p>
       </div>
       <div className="review-delete-buttons">

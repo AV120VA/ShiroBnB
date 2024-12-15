@@ -46,7 +46,7 @@ function Review({ reviews, onDelete }) {
                     modalComponent={
                       <DeleteReviewModal
                         reviewId={review.id}
-                        onDelete={onDelete}
+                        onDelete={onDelete} // Passing onDelete for refreshing parent component
                       />
                     }
                     className="manage-button"
