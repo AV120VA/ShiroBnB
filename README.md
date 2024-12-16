@@ -1,5 +1,35 @@
 # ShiroBnB
 
+- Technologies Used:
+
+  - Backend:
+    - Node.js
+    - Sequelize.js
+    - Express.js
+    - Postgres.sql
+    - SQl
+  - Frontend:
+
+    - React.js
+    - Redux
+    - Vite
+
+![site-example]
+
+[site-example]: images/site-example.png
+
+### In order to run locally
+
+- cd into backend folder from root directory
+
+  - run npm install
+  - migrate and seed database with: npx dotenv sequelize db:migrate and then db:seed:all
+  - run npm start
+
+- cd into frontend from root directory
+  - run npm install
+  - run npm run dev then type "o" in terminal to open in browser
+
 ## Database Schema Design
 
 ![airbnb-database-schema]
