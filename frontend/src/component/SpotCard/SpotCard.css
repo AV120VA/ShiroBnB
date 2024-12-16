@@ -1,11 +1,21 @@
 .spot-card-container {
   cursor: pointer;
   z-index: 0;
+  width: 29%;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid rgba(112, 128, 144, 0.5);
+  border-radius: 10px;
+  box-shadow: 3px 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .spot-card-img {
   height: 300px;
-  border-radius: 10px;
+  width: 100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 .star {
   background-color: white;
@@ -18,10 +28,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-left: 20px;
 }
 
 .rating-box {
   display: flex;
   align-items: center;
   gap: 5px;
+  padding-right: 50px;
+}
+
+.price-box {
+  padding-left: 20px;
+}
+
+.spot-card-text {
+  font-size: 18px;
 }

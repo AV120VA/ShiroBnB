@@ -5,8 +5,6 @@ function SpotCard({ spot }) {
   const navigate = useNavigate();
 
   const onClick = (spotId) => {
-    //add stuff for delete and update here with event later
-
     navigate(`/spots/${spotId}`);
   };
 
@@ -26,15 +24,19 @@ function SpotCard({ spot }) {
     >
       <img className="spot-card-img" src={`${imageUrl}`} alt="preview" />
       <div className="detail-box">
-        <p className="location">
+        <p className="location spot-card-text">
           {spot.city}, {spot.state}
         </p>
         <div className="rating-box">
           <img className="star" src="/star.png" alt="star" />
-          <p className="rating">{spot.avgRating ? spot.avgRating : "New"}</p>
+          <p className="rating spot-card-text">
+            {spot.avgRating > 0 ? spot.avgRating : "New"}
+          </p>
         </div>
       </div>
-      <p className="price">${spot.price} per night</p>
+      <div className="price-box">
+        <p className="price spot-card-text">${spot.price} night</p>
+      </div>
     </div>
   );
 }
