@@ -23,7 +23,9 @@ function ManageCard({ spot }) {
         </p>
         <div className="manage-rating-box">
           <img className="star" src="/star.png" alt="star" />
-          <p className="rating">{spot.avgRating ? spot.avgRating : "New"}</p>
+          <p className="rating">
+            {spot.avgRating > 0 ? spot.avgRating : "New"}
+          </p>
         </div>
       </div>
       <p className="price">${spot.price} per night</p>

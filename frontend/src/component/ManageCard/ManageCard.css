@@ -6,6 +6,7 @@
 
 .manage-card-img {
   height: 292px;
+  width: 100%;
   border-radius: 10px;
 }
 .star {

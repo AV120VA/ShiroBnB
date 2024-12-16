@@ -75,13 +75,16 @@ function SpotDetail() {
                   <div className="spacer-box">
                     <img src="/star.png" alt="star" className="details-star" />
                     <p className=" white-text review-count">
-                      {spot.avgStarRating}
+                      {spot.avgStarRating > 0 ? spot.avgStarRating : "New"}
                     </p>
                   </div>
-                  <p className="white-text"></p>
-                  <p className="review-count white-text">
-                    {spot.numReviews} {reviewLabel}
-                  </p>
+                  <div className="review-count-box">
+                    {spot.numReviews > 0 && <p className="white-text">#</p>}
+                    <p className="review-count white-text">
+                      {spot.numReviews > 0 ? spot.numReviews : null}{" "}
+                      {spot.numReviews > 0 ? reviewLabel : null}
+                    </p>
+                  </div>
                 </div>
               </div>
               <div className="reserve-button-box">
