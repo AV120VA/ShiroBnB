@@ -75,7 +75,9 @@ function SpotDetail() {
                   <div className="spacer-box">
                     <img src="/star.png" alt="star" className="details-star" />
                     <p className=" white-text review-count">
-                      {spot.avgStarRating > 0 ? spot.avgStarRating : "New"}
+                      {spot.avgStarRating > 0
+                        ? spot.avgStarRating.toFixed(1)
+                        : "New"}
                     </p>
                   </div>
                   <div className="review-count-box">
@@ -91,7 +93,7 @@ function SpotDetail() {
                 <button
                   type="button"
                   className="reserve-button"
-                  onClick={() => alert("Feature Coming Soon!")}
+                  onClick={() => alert("Feature Coming Soon")}
                 >
                   Reserve
                 </button>

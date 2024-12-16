@@ -30,7 +30,7 @@ function SpotCard({ spot }) {
         <div className="rating-box">
           <img className="star" src="/star.png" alt="star" />
           <p className="rating spot-card-text">
-            {spot.avgRating > 0 ? spot.avgRating : "New"}
+            {spot.avgRating > 0 ? spot.avgRating.toFixed(1) : "New"}
           </p>
         </div>
       </div>

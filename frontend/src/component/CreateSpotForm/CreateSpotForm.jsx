@@ -225,7 +225,7 @@ function CreateSpotForm() {
             />
             {errors.name && <p className="error-text">Name is required</p>}
           </div>
-          <div className="price-box sub-box">
+          <div className="sub-box">
             <h3 className="section-heading">Set a base price for your spot</h3>
             <p className="section-text">
               Competitive pricing can help your listing stand out and rank

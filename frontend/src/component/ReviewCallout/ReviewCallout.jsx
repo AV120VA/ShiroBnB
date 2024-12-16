@@ -49,9 +49,7 @@ function ReviewCallout({ spot }) {
                 <p className="review-callout-text">
                   {spot.avgStarRating?.toFixed(1) || "0.0"}
                 </p>
-              ) : (
-                <p className="review-callout-text">0.0</p>
-              )}
+              ) : null}
             </div>
             {reviewsArray.length > 0 && (
               <p className="review-callout-text">•</p>
