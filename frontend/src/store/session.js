@@ -21,21 +21,17 @@ export const removeUser = () => ({
 
 // Thunk Action
 export const login = (credential, password) => async (dispatch) => {
-  try {
-    const res = await csrfFetch("/api/session", {
-      method: "POST",
-      body: JSON.stringify({
-        credential,
-        password,
-      }),
-    });
+  const res = await csrfFetch("/api/session", {
+    method: "POST",
+    body: JSON.stringify({
+      credential,
+      password,
+    }),
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    dispatch(setUser(data.user));
-  } catch (error) {
-    throw error;
-  }
+  dispatch(setUser(data.user));
 };
 
 export const logout = () => async (dispatch) => {

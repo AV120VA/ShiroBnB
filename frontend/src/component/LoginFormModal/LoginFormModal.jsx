@@ -15,11 +15,9 @@ function LoginFormModal() {
     e.preventDefault();
     setError(false);
     try {
-      const res = await dispatch(sessionActions.login(credential, password));
+      await dispatch(sessionActions.login(credential, password));
       closeModal();
     } catch (error) {
-      console.log(error);
-
       if (error) {
         setError(true);
       }
