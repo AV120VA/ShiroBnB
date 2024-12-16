@@ -10,6 +10,7 @@
   list-style: none;
   padding: 10px;
   margin: 0;
+  min-width: 128px;
 }
 
 .manage-spots {

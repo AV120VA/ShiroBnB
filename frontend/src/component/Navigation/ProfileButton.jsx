@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import * as sessionActions from "../../store/session";
-import "./ProfileButton.css"; // Ensure this path is correct
+import "./ProfileButton.css";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -12,7 +12,7 @@ function ProfileButton({ user }) {
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
-    e.stopPropagation(); // Keep click from bubbling up to document and triggering closeMenu
+    e.stopPropagation();
     setShowMenu(!showMenu);
   };
 
@@ -33,6 +33,7 @@ function ProfileButton({ user }) {
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
+    navigate("/");
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
@@ -44,9 +45,7 @@ function ProfileButton({ user }) {
       </button>
       <ul className={ulClassName} ref={ulRef}>
         <li>{user.username}</li>
-        <li>
-          {user.firstName} {user.lastName}
-        </li>
+        <li>Hello, {user.firstName}</li>
         <li>{user.email}</li>
         <li className="manage-spots" onClick={() => navigate("/spots/current")}>
           Manage Spots
