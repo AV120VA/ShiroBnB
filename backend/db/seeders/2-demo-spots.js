@@ -53,6 +53,48 @@ module.exports = {
         price: 120,
         previewImage: "https://i.imgur.com/h2kzWf4.jpeg",
       },
+      {
+        ownerId: 1,
+        address: "123 Nijo St",
+        city: "Nakagyo",
+        state: "Kyoto",
+        country: "Japan",
+        lat: 80.98,
+        lng: 179.99,
+        name: "Nijo Castle",
+        description:
+          "Discover Nijo Castle, a charming and historic retreat offering a unique blend of medieval architecture and modern amenities. Enjoy breathtaking views, spacious rooms, and a serene atmosphere perfect for relaxation.",
+        price: 180,
+        previewImage: "https://i.imgur.com/Y6NIvDQ.jpeg",
+      },
+      {
+        ownerId: 2,
+        address: "453 Marunouchi St",
+        city: "Marunouchi",
+        state: "Nagano",
+        country: "Japan",
+        lat: 81.98,
+        lng: 159.99,
+        name: "Matsumoto Castle",
+        description:
+          "Stay at Matsumoto Castle, a stunning piece of Japanese history. Experience traditional elegance with modern comfort, surrounded by picturesque views, lush gardens, and a peaceful, cultural atmosphere.",
+        price: 250,
+        previewImage: "https://i.imgur.com/y18GfHI.jpeg",
+      },
+      {
+        ownerId: 3,
+        address: "917 MadeUp St",
+        city: "Maranouchi",
+        state: "Kanazawa",
+        country: "Japan",
+        lat: 100.98,
+        lng: 149.99,
+        name: "Kanazawa Castle",
+        description:
+          "Discover Kanazawa Castle, a historic gem offering a blend of ancient beauty and serene surroundings. Enjoy panoramic views, peaceful gardens, and a rich cultural experience in the heart of Japan.",
+        price: 220,
+        previewImage: "https://i.imgur.com/keUXyUX.jpeg",
+      },
     ]);
   },
 

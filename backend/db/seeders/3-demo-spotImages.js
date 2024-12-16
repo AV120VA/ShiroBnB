@@ -86,6 +86,81 @@ module.exports = {
         url: "https://via.placeholder.com/150",
         preview: "false",
       },
+      {
+        spotId: 4,
+        url: "https://i.imgur.com/Y6NIvDQ.jpeg",
+        preview: "true",
+      },
+      {
+        spotId: 4,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 4,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 4,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 4,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 5,
+        url: "https://i.imgur.com/y18GfHI.jpeg",
+        preview: "true",
+      },
+      {
+        spotId: 5,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 5,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 5,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 5,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 6,
+        url: "https://i.imgur.com/keUXyUX.jpeg",
+        preview: "true",
+      },
+      {
+        spotId: 6,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 6,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 6,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
+      {
+        spotId: 6,
+        url: "https://via.placeholder.com/150",
+        preview: "false",
+      },
     ]);
   },
 
