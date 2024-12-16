@@ -8,48 +8,66 @@ function LoginFormModal() {
   const dispatch = useDispatch();
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const [error, setError] = useState(false);
   const { closeModal } = useModal();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({});
-    return dispatch(sessionActions.login(credential, password))
-      .then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-        }
-      });
+    setError(false);
+    try {
+      const res = await dispatch(sessionActions.login(credential, password));
+      closeModal();
+    } catch (error) {
+      console.log(error);
+
+      if (error) {
+        setError(true);
+      }
+    }
   };
 
   return (
-    <>
+    <div className="session-div">
       <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username or Email
-          <input
-            type="text"
-            value={credential}
-            onChange={(e) => setCredential(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit">Log In</button>
+      {error === true && (
+        <p className="error-text">The provided credentials were invalid</p>
+      )}
+      <form className="session-form" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          className="session-input"
+          value={credential}
+          placeholder="Username or Email"
+          onChange={(e) => setCredential(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          className="session-input"
+          value={password}
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button
+          type="submit"
+          className="session-login"
+          disabled={credential.length < 4 || password.length < 6}
+        >
+          Log In
+        </button>
+        <a
+          className="demo-user"
+          onClick={async () =>
+            await dispatch(
+              sessionActions.login("Demo-lition", "password")
+            ).then(closeModal())
+          }
+        >
+          Demo User
+        </a>
       </form>
-    </>
+    </div>
   );
 }
 

@@ -34,7 +34,7 @@ export const login = (credential, password) => async (dispatch) => {
 
     dispatch(setUser(data.user));
   } catch (error) {
-    console.error("Login failed:", error);
+    throw error;
   }
 };
 

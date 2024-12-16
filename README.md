@@ -1,4 +1,4 @@
-# AirBnB Clone
+# ShiroBnB
 
 ## Database Schema Design
 
