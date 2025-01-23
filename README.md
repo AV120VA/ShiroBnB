@@ -1,18 +1,5 @@
 # ShiroBnB
 
-- Technologies Used:
-
-  - Backend:
-    - Node.js
-    - Sequelize.js
-    - Express.js
-    - Postgres.sql
-    - SQl
-  - Frontend:
-
-    - React.js
-    - Redux
-    - Vite
 
 ![site-example]
 
@@ -35,6 +22,20 @@
 ![airbnb-database-schema]
 
 [airbnb-database-schema]: images/db-schema.png
+
+- Technologies Used:
+
+  - Backend:
+    - Node.js
+    - Sequelize.js
+    - Express.js
+    - Postgres.sql
+    - SQl
+  - Frontend:
+
+    - React.js
+    - Redux
+    - Vite
 
 ## API Documentation
 
