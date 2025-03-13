@@ -1,5 +1,4 @@
 # ShiroBnB
-Live Link: https://api-project-cz3a.onrender.com/
 
 ![site-example]
 
